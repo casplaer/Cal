@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> UserManager
 @inject SignInManager<AppUser> SignInManager
+@model IEnumerable<Event>
 
 @{
     ViewData["Title"] = "Home";
@@ -19,8 +20,6 @@
         "Ноябрь",
         "Декабрь"
     };
-
-
 
     int currentMonth = ViewBag.currentMonth;
     int currentYear = ViewBag.currentYear;
@@ -49,9 +48,39 @@
         }
     }
 
+    string GetText(DateTime date)
+    {
+        if (Model.Count(e => e.Date.Date == date.Date) == 0)
+        {
+            return "На сегодня ничего не запланировано. <a asp-controller='Event' asp-action='NewEvent'>Добавить событие.</a>";
+        }
+        else
+        {
+            return $"На сегодня событий: {Model.Count(e => e.Date.Date == date.Date) == 0}";
+        }
+    }
+
+    bool IsEvent(DateTime date)
+    {
+        if (Model.Count(e => e.Date.Date == date.Date) == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    DateTime toDate(string date)
+    {
+        DateTime Date;
+        bool a = DateTime.TryParse(date, out Date);
+        if (a) return Date;
+        else return Date;
+    }
 }
 
-@model IEnumerable<Event>
 
 <html lang="en">
 <head>
@@ -62,56 +91,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <script>
-        let selectedDay = null;
-
-        function selectDay(dayElement) {
-            // Проверяем, активен ли уже выбранный день
-            if (!dayElement.classList.contains('selected')) {
-                // Удаляем класс 'selected' у всех элементов с классом 'day-num'
-                const dayNumElements = document.querySelectorAll('.day-num');
-                dayNumElements.forEach(element => element.classList.remove('selected'));
-
-                // Убираем все строки, кроме первой
-                const dayRows = document.querySelectorAll('.events');
-                dayRows.forEach((row, index) => {
-                    if (index > 0) {
-                        row.remove();
-                    }
-                });
-
-                // Добавляем класс 'selected' к выбранному элементу
-                dayElement.classList.add('selected');
-
-                // Создаем новую строку под выбранным днем
-                const newRow = document.createElement('div');
-                newRow.classList.add('events');
-                for (let i = 0; i < 7; ++i) {
-                    newRow.innerHTML += '<div class="events"></div>';
-                }
-
-                // Вставляем новую строку после выбранного дня
-                dayElement.parentNode.parentNode.insertBefore(newRow, dayElement.parentNode.nextSibling);
-
-                // Обновляем выбранный день
-                selectedDay = dayElement;
-            } else {
-                // Если нажали на уже выбранный день, снимаем выбор
-                dayElement.classList.remove('selected');
-                selectedDay = null;
-
-                // Убираем все строки, кроме первой
-                const dayRows = document.querySelectorAll('.events');
-                dayRows.forEach((row, index) => {
-                    if (index > 0) {
-                        row.remove();
-                    }
-                });
-            }
-        }
-    </script>
-
-
 
     <style>
         /* Стили для календаря */
@@ -170,12 +149,34 @@
             height: 125px;
         }
 
-        .days .day-num div
+        .days .day-num .number
         {
             position: absolute;
             bottom: 0;
             right: 0;
             padding-right: 5px;
+        }
+
+        .days .day-num .text 
+        {
+            color:black;
+            text-align:left;
+            vertical-align:top;
+            position:absolute;
+            top:10px;
+            left:10px;
+        }
+
+        .days .day-num .text .add
+        
+        {
+            color: black;
+            text-align: left;
+            vertical-align:bottom;
+            text-decoration:none;
+            position: relative;
+            bottom: -63px;
+            left: 0px;
         }
 
         button {
@@ -228,18 +229,34 @@
                     }
                     else
                     {
-                        <a asp-controller="Event" asp-action="Index" asp-route-Username="@User.Identity?.Name" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
-                            <div class="text">
-                                @nums[i][j]
+                        var kal = toDate(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + nums[i][j].ToString());
+                        if (IsEvent(kal))
+                        {
+                            <a asp-controller="Event" asp-action="Index" asp-route-Username="@User.Identity?.Name" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
+                                <div class="text">
+                                    Событий: @Model.Count(e=>e.Date.Date == kal)
+                                </div>
+                                <div class="number">
+                                    @nums[i][j]
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="day-num">
+                                <div class="number">
+                                    @nums[i][j]
+                                </div>
+                                <div class="text">
+                                    Нет событий
+                                    <a asp-controller='Event' asp-action='NewEvent' class="add">Добавить</a>
+                                </div>
                             </div>
-                        </a>
+                        }
                     }
                 }
             </div>
         }
     </div>
-
-    
-
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using Cal.Data;
 using Cal.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -9,21 +10,29 @@ namespace Calendar.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, SignInManager<AppUser> signInManager)
         {
             _logger = logger;
             _context = context;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
-            //List<Event> _events = _context.Events.ToList();
-
-            int currentMonth = HttpContext.Session.GetInt32("currentMonth") ?? DateTime.Now.Month;
-            ViewBag.currentMonth = currentMonth;
-            ViewBag.currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
-            return View();
+                int currentMonth = HttpContext.Session.GetInt32("currentMonth") ?? DateTime.Now.Month;
+                ViewBag.currentMonth = currentMonth;
+                int currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
+                ViewBag.currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
+            if (_signInManager.IsSignedIn(User))
+            {
+                List<Event> _events = _context.Events
+                    .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear)
+                    .ToList();
+                return View(_events);
+            }
+            else return View();
         }
 
         [HttpPost]
