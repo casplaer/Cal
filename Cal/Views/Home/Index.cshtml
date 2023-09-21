@@ -1,0 +1,231 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    List<string> months = new List<string>
+    {
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь", 
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь"
+    };
+
+    int currentMonth = ViewBag.currentMonth;
+    int currentYear = ViewBag.currentYear;
+
+    DateTime firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
+
+    DayOfWeek dayOfWeek = firstDayOfMonth.DayOfWeek;
+
+    int daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+    int counter = 1;
+    List<List<int?>> nums = new List<List<int?>>();
+
+    for(int i = 0; i < 5; ++i)
+    {
+        nums.Add(new List<int?>());
+        for(int j = 0; j < 7; ++j)
+        {
+            if (i == 0 && j < (int)dayOfWeek)
+            {
+                nums[i].Add(null);
+                counter--;
+            }
+            else if (i==4 && j > (int)new DateTime(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth)).DayOfWeek) nums[i].Add(null);
+            else nums[i].Add(counter);
+            counter++;
+        }
+    }
+}
+
+@model IEnumerable<Event>
+
+<html lang="en">
+<head>
+    <title>Календарик</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script>
+        let selectedDay = null;
+
+        function selectDay(dayElement) {
+            // Проверяем, активен ли уже выбранный день
+            if (!dayElement.classList.contains('selected')) {
+                // Удаляем класс 'selected' у всех элементов с классом 'day-num'
+                const dayNumElements = document.querySelectorAll('.day-num');
+                dayNumElements.forEach(element => element.classList.remove('selected'));
+
+                // Убираем все строки, кроме первой
+                const dayRows = document.querySelectorAll('.events');
+                dayRows.forEach((row, index) => {
+                    if (index > 0) {
+                        row.remove();
+                    }
+                });
+
+                // Добавляем класс 'selected' к выбранному элементу
+                dayElement.classList.add('selected');
+
+                // Создаем новую строку под выбранным днем
+                const newRow = document.createElement('div');
+                newRow.classList.add('events');
+                for (let i = 0; i < 7; ++i) {
+                    newRow.innerHTML += '<div class="events"></div>';
+                }
+
+                // Вставляем новую строку после выбранного дня
+                dayElement.parentNode.parentNode.insertBefore(newRow, dayElement.parentNode.nextSibling);
+
+                // Обновляем выбранный день
+                selectedDay = dayElement;
+            } else {
+                // Если нажали на уже выбранный день, снимаем выбор
+                dayElement.classList.remove('selected');
+                selectedDay = null;
+
+                // Убираем все строки, кроме первой
+                const dayRows = document.querySelectorAll('.events');
+                dayRows.forEach((row, index) => {
+                    if (index > 0) {
+                        row.remove();
+                    }
+                });
+            }
+        }
+    </script>
+
+
+
+    <style>
+        /* Стили для календаря */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .calendar {
+            width: 80%;
+            margin: 0 auto;
+            background-color:white;
+        }
+
+        .month {
+            text-align: center;
+            background-color:black;
+            color: #fff;
+            padding: 10px;
+            border: 1px;
+            /*border-top-left-radius:7.5px;
+            border-top-right-radius:7.5px;*/
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            background-color: #eee;
+            padding: 10px;
+            position: relative;
+        }
+
+        .day {
+            text-align: center;
+            border: 2px solid #ccc;
+            padding: 10px;
+           /* border-radius: 7.5px;*/
+           border-color: black;
+        }
+
+        .day-num {
+            text-align: center;
+            border: 2px solid #ccc;
+            /*border-radius: 7.5px;*/
+            padding: 10px;
+            border-color: black;
+            width: 100%;
+            height: 125px;
+            text-align: right;
+            position: relative;
+            background-color:white;
+            cursor:pointer;
+        }
+
+        .events{
+            width: 125px;
+            height: 125px;
+        }
+
+        .days .day-num div
+        {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding-right: 5px;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="month">
+            <h1>@months[currentMonth-1] @currentYear</h1>
+            <form method="post">
+                <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="false">Предыдущий месяц</button>
+                <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="true">Следующий месяц</button>
+            </form>
+        </div>
+        <div class="days">
+            <div class="day">Вс</div>
+            <div class="day">Пн</div>
+            <div class="day">Вт</div>
+            <div class="day">Ср</div>
+            <div class="day">Чт</div>
+            <div class="day">Пт</div>
+            <div class="day">Сб</div>
+        </div>
+        @for (int i = 0; i < 5; ++i)
+        {
+            <div class="days" id="days">
+                @for(int j = 0; j < 7; ++j)
+                {
+                    if(nums[i][j]==null)
+                    {
+                        <div class="day" style="background-color:#f2f2f2">
+                            <div class="text">
+                                @nums[i][j]
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-controller="Event" asp-action="Index" asp-route-date="2023-09-19" class="day-num" style="color:black">
+                            <div class="text">
+                                @nums[i][j]
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    
+
+</body>
+</html>
