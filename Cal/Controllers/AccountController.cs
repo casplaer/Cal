@@ -1,7 +1,6 @@
 ﻿using Cal.Data;
 using Cal.Models;
-using Calendar.ViewModels;
-using Microsoft.AspNetCore.Http;
+using Cal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,13 +19,14 @@ namespace Cal.Controllers
             _context = context;
         }
 
-/*        [Route("Account/Login")]
-*/        public IActionResult Login()
+        [Route("Account/Login")]
+        public IActionResult Login()
         {
             var response = new LoginViewModel();
             return View(response);
         }
 
+        [Route("Account/Login")]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
@@ -50,6 +50,44 @@ namespace Cal.Controllers
             }
             TempData["Error"] = "Wrond credentials. Try again.";
             return View(loginViewModel);
+        }
+
+        [Route("Account/Register")]
+        public IActionResult Register()
+        {
+            var response = new RegisterViewModel();
+            return View(response);
+        }
+
+        [HttpPost]
+        [Route("Account/Register")]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid) return View(registerViewModel);
+
+            var user = await _userManager.FindByEmailAsync(registerViewModel.Email);
+            if(user != null)
+            {
+                TempData["Error"] = "Аккаунт с таким адресом уже существует.";
+                return View(registerViewModel);
+            }
+
+            var newUser = new AppUser()
+            {
+                Email = registerViewModel.Email,
+                UserName = registerViewModel.Email,
+            };
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+
+            
+            return View("Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

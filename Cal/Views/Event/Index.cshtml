@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Event>
+@{
+    ViewData["Title"] = "Событие";
+}
+@foreach(var Event in Model)
+{
+    <h1>@Event.Description</h1>
+}

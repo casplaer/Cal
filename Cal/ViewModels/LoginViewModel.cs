@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Calendar.ViewModels
+namespace Cal.ViewModels
 {
     public class LoginViewModel
     {
@@ -12,9 +12,7 @@ namespace Calendar.ViewModels
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-/*        [Display(Name = "Запомнить?")]
+        [Display(Name = "Запомнить?")]
         public bool RememberMe { get; set; }
-
-        public string ReturnUrl { get; set; }*/
     }
 }

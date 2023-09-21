@@ -46,6 +46,7 @@ else
 }
 
 
+
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();

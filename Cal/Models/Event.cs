@@ -9,7 +9,7 @@ namespace Cal.Models
         [Key]
         public int Id { get; set; }
         public AppUser? AppUser { get; set; }
-        [ForeignKey("AppUserId")]
+        [ForeignKey("UserId")]
         public string? UserId { get; set; }
         public DateTime Date { get; set; }
         public string? Name { get; set; }
