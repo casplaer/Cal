@@ -2,7 +2,16 @@
 @{
     ViewData["Title"] = "Событие";
 }
-@foreach(var Event in Model)
+
+@if(!Model.Any())
 {
-    <h1>@Event.Description</h1>
+    <h1>У вас ничего не запланировано на сегодня. Добавьте новое событие на сегодня.</h1>
+    <a asp-action="NewEvent">Добавить событие.</a>
+}
+else
+{
+    @foreach(var Event in Model)
+    {
+        <h1>@Event.Description</h1>
+    }
 }

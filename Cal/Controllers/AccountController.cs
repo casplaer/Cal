@@ -45,10 +45,10 @@ namespace Cal.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-                TempData["Error"] = "Wrong credentials. Please, try again.";
+                TempData["Error"] = "Некорректные данные, попробуйте ещё раз.";
                 return View(loginViewModel);
             }
-            TempData["Error"] = "Wrond credentials. Try again.";
+            TempData["Error"] = "Некорректные данные, попробуйте ещё раз.";
             return View(loginViewModel);
         }
 
@@ -79,8 +79,13 @@ namespace Cal.Controllers
             };
             var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
 
-            
-            return View("Home");
+            var result = await _signInManager.PasswordSignInAsync(newUser, registerViewModel.Password, false, false);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

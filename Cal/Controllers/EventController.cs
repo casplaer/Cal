@@ -13,14 +13,34 @@ namespace Cal.Controllers
             _context = context;
         }
 
-        [HttpGet("{Id}/{date}")]
-        public async Task<IActionResult> Index(string Id, DateTime date)
+        [HttpGet]
+        public async Task<IActionResult> Index(DateTime date)
         {
             var events = await _context.Events
-                .Where(e => e.AppUser.Id == Id && e.Date.Date == date.Date)
+                .Where(e => e.Date.Date == date.Date)
                 .ToListAsync();
 
             return View(events);
         }
+
+        [HttpGet]
+        public IActionResult NewEvent()
+        {
+            return View();
+        }
+
+/*        [HttpPost]
+        public async Task<IActionResult> NewEvent(Event newEvent)
+        {
+            if (!ModelState.IsValid)
+                return View(newEvent);
+
+            var createNewEvent = new Event()
+            {
+                Date = newEvent.Date,
+
+            };
+            
+        }*/
     }
 }

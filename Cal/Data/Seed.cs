@@ -38,7 +38,7 @@ namespace Cal.Data
                             Date = new DateTime(2023, 9, 20),
                             Name = "TestEvent2",
                             Description = "TestDescription2",
-                            AppUser = await context.Users.FindAsync("1"),
+                            AppUser = await context.Users.FindAsync("user@mail.ru"),
                             UserId = "1"
                         },
                         new Models.Event()

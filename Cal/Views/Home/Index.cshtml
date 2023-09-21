@@ -1,4 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+@{
     ViewData["Title"] = "Home";
     List<string> months = new List<string>
     {
@@ -15,6 +19,8 @@
         "Ноябрь",
         "Декабрь"
     };
+
+
 
     int currentMonth = ViewBag.currentMonth;
     int currentYear = ViewBag.currentYear;
@@ -42,6 +48,7 @@
             counter++;
         }
     }
+
 }
 
 @model IEnumerable<Event>
@@ -156,7 +163,6 @@
             text-align: right;
             position: relative;
             background-color:white;
-            cursor:pointer;
         }
 
         .events{
@@ -212,9 +218,17 @@
                             </div>
                         </div>
                     }
+                    else if(!SignInManager.IsSignedIn(User))
+                    {
+                        <div class="day-num">
+                            <div class="text">
+                                @nums[i][j]
+                            </div>
+                        </div>
+                    }
                     else
                     {
-                        <a asp-controller="Event" asp-action="Index" asp-route-id="1" asp-route-date="2023-09-19" class="day-num" style="color:black">
+                        <a asp-controller="Event" asp-action="Index" asp-route-Username="@User.Identity?.Name" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
                             <div class="text">
                                 @nums[i][j]
                             </div>
