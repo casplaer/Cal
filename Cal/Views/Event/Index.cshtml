@@ -3,15 +3,66 @@
     ViewData["Title"] = "Событие";
 }
 
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 10px; /* Расстояние между элементами списка */
+    }
+
+    span {
+        font-size: 16px; /* Размер шрифта для времени */
+        margin-right: 10px; /* Расстояние между временем и именем события */
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 18px; /* Размер шрифта для имени события */
+    }
+
+    div.description {
+        display: none;
+        font-size: 16px; /* Размер шрифта для описания события */
+    }
+</style>
+
 @if(!Model.Any())
 {
     <h1>У вас ничего не запланировано на сегодня. Добавьте новое событие на сегодня.</h1>
-    <a asp-action="NewEvent">Добавить событие.</a>
+    <a style="color:black; text-decoration:none" asp-action="NewEvent">Добавить событие.</a>
 }
 else
 {
-    @foreach(var Event in Model)
-    {
-        <h1>@Event.Description</h1>
-    }
+    <ul>
+        @foreach (var Event in Model.OrderBy(e => e.Date))
+        {
+            <li>
+                <span>@Event.Date.ToShortTimeString()</span>
+                <a style="color: black; text-decoration: none; cursor: pointer;" onclick="toggleDescription(@Event.Id)">@Event.Name</a>
+                <div id="description-@Event.Id" style="display: none;">
+                    @Event.Description
+                </div>
+            </li>
+        }
+    </ul>
+
+    <div style="position:absolute; bottom:10%; background-color:black;">
+        <a asp-controller="Event" asp-action="NewEvent" style="background-color:black"class="btn btn-primary">Добавить событие</a>
+    </div>
 }
+
+<script>
+    function toggleDescription(eventId) {
+        var descriptionElement = document.getElementById("description-" + eventId);
+        if (descriptionElement.style.display === "none" || descriptionElement.style.display === "") {
+            descriptionElement.style.display = "block";
+        } else {
+            descriptionElement.style.display = "none";
+        }
+    }
+</script>

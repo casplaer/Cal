@@ -38,9 +38,11 @@ namespace Cal.Controllers
             var createNewEvent = new Event()
             {
                 Date = newEvent.Date,
-
+                Name = newEvent.Name,
+                Description = newEvent.Description,
+                AppUser = 
             };
-            
+
         }*/
     }
 }

@@ -11,8 +11,11 @@ namespace Cal.Models
         public AppUser? AppUser { get; set; }
         [ForeignKey("UserId")]
         public string? UserId { get; set; }
+        [Display(Name = "Время")]
         public DateTime Date { get; set; }
+        [Display(Name="Название")]
         public string? Name { get; set; }
+        [Display(Name = "Описание")]
         public string? Description { get; set; }
     }
 }

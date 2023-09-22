@@ -161,21 +161,20 @@
         {
             color:black;
             text-align:left;
-            vertical-align:top;
+            vertical-align:bottom;
             position:absolute;
             top:10px;
             left:10px;
         }
 
-        .days .day-num .text .add
-        
+        .days .day-num .text .add    
         {
             color: black;
             text-align: left;
             vertical-align:bottom;
             text-decoration:none;
             position: relative;
-            bottom: -63px;
+            bottom: -85px;
             left: 0px;
         }
 
@@ -243,15 +242,11 @@
                         }
                         else
                         {
-                            <div class="day-num">
+                            <a asp-controller="Event" asp-action="Index" class="day-num" style="color:black">
                                 <div class="number">
                                     @nums[i][j]
                                 </div>
-                                <div class="text">
-                                    Нет событий
-                                    <a asp-controller='Event' asp-action='NewEvent' class="add">Добавить</a>
-                                </div>
-                            </div>
+                            </a>
                         }
                     }
                 }
