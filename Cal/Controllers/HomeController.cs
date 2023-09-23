@@ -21,14 +21,14 @@ namespace Calendar.Controllers
 
         public IActionResult Index()
         {
-                int currentMonth = HttpContext.Session.GetInt32("currentMonth") ?? DateTime.Now.Month;
-                ViewBag.currentMonth = currentMonth;
-                int currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
-                ViewBag.currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
+            int currentMonth = HttpContext.Session.GetInt32("currentMonth") ?? DateTime.Now.Month;
+            ViewBag.currentMonth = currentMonth;
+            int currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
+            ViewBag.currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
             if (_signInManager.IsSignedIn(User))
             {
                 List<Event> _events = _context.Events
-                    .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear)
+                    .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear && e.AppUser.Email == User.Identity.Name)
                     .ToList();
                 return View(_events);
             }

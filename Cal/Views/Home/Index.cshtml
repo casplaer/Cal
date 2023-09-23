@@ -231,7 +231,7 @@
                         var kal = toDate(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + nums[i][j].ToString());
                         if (IsEvent(kal))
                         {
-                            <a asp-controller="Event" asp-action="Index" asp-route-Username="@User.Identity?.Name" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
+                            <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
                                 <div class="text">
                                     Событий: @Model.Count(e=>e.Date.Date == kal)
                                 </div>

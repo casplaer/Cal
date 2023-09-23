@@ -23,6 +23,7 @@ namespace Cal.Data
 
             if (!context.Events.Any())
             {
+                var user = await userManager.FindByEmailAsync("user@mail.ru");
                 context.Events.AddRange(new List<Models.Event>()
                     {
                         new Models.Event()
@@ -30,24 +31,24 @@ namespace Cal.Data
                             Date = new DateTime(2023, 9, 19),
                             Name = "TestEvent1",
                             Description = "TestDescription1",
-                            AppUser = await context.Users.FindAsync("1"),
-                            UserId = "1"
+                            AppUser = user,
+                            UserId = user.Id
                         },
                         new Models.Event()
                         {
                             Date = new DateTime(2023, 9, 20),
                             Name = "TestEvent2",
                             Description = "TestDescription2",
-                            AppUser = await context.Users.FindAsync("user@mail.ru"),
-                            UserId = "1"
+                            AppUser = user,
+                            UserId = user.Id
                         },
                         new Models.Event()
                         {
                             Date = new DateTime(2023, 9, 20),
                             Name = "TestEvent3",
                             Description = "TestDescription3",
-                            AppUser = await context.Users.FindAsync("1"),
-                            UserId = "1"
+                            AppUser = user,
+                            UserId = user.Id
                         }
                     });
                 context.SaveChanges();

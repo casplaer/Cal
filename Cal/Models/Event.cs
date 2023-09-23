@@ -12,6 +12,7 @@ namespace Cal.Models
         [ForeignKey("UserId")]
         public string? UserId { get; set; }
         [Display(Name = "Время")]
+        [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
         [Display(Name="Название")]
         public string? Name { get; set; }
