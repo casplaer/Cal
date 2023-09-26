@@ -11,14 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddRazorPages();
-builder.Services.AddSession();
-
-builder.Services.AddIdentityCore<AppUser>(options =>
+builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireLowercase = false;
@@ -30,6 +23,23 @@ builder.Services.AddIdentityCore<AppUser>(options =>
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager<SignInManager<AppUser>>();
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
+builder.Services.AddSession();
+
+/*builder.Services.AddIdentityCore<AppUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+})
+    .AddRoles<IdentityRole>()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager<SignInManager<AppUser>>();*/
 
 var app = builder.Build();
 

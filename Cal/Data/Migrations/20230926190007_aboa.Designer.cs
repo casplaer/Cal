@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230921120032_id")]
-    partial class id
+    [Migration("20230926190007_aboa")]
+    partial class aboa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
