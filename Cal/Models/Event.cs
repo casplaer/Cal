@@ -15,8 +15,12 @@ namespace Cal.Models
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
         [Display(Name="Название")]
-        public string? Name { get; set; }
+        [Required(ErrorMessage = "Это поле не может быть пустым.")]
+        [StringLength(200, MinimumLength = 1, ErrorMessage = "Поле не может быть пустым.")]
+        public string Name { get; set; }
         [Display(Name = "Описание")]
-        public string? Description { get; set; }
+        [Required(ErrorMessage = "Это поле не может быть пустым.")]
+        [StringLength(3000, MinimumLength = 1, ErrorMessage = "Поле не может быть пустым.")]
+        public string Description { get; set; }
     }
 }

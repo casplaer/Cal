@@ -28,6 +28,10 @@
     div.description {
         display: none;
         font-size: 30px;
+        width: 1200px; /* Ширина блока описания */
+        height: auto; /* Высота блока описания */
+        overflow: auto; /* Добавляем полосы прокрутки, если содержимое превышает размеры блока */
+        word-wrap: break-word;
     }
 </style>
 
@@ -40,16 +44,22 @@
 }
 else
 {
+    <h1>Ваши планы на @Model.First().Date.ToShortDateString()</h1>
     <ul>
         @foreach (var Event in Model.OrderBy(e => e.Date))
         {
-            <li>
+            <li style="display: flex; align-items: center;">
                 <span>@Event.Date.ToShortTimeString()</span>
                 <a style="color: black; text-decoration: none; cursor: pointer;" onclick="toggleDescription(@Event.Id)">@Event.Name</a>
-                <div id="description-@Event.Id" style="display: none;" class="description">
-                    @Event.Description
-                </div>
+                <div style="flex-grow: 1;"></div> <!-- Этот элемент занимает всю доступную ширину и создает пространство между названием и описанием -->
+                <a asp-action="DeleteEvent" asp-route-id="@Event.Id">
+                    <img src="icons/trash.png" style="width:35px; height:35px">
+                </a>
             </li>
+            <div id="description-@Event.Id" style="display: none; margin-top: 10px;" class="description">
+                @Event.Description
+            </div>
+
         }
     </ul>
 
@@ -60,7 +70,7 @@ else
 
 <script>
     function toggleDescription(eventId) {
-        var descriptionElement = document.getElementById("description-" + eventId);
+        var descriptionElement = document.querySelector("#description-" + eventId);
         if (descriptionElement.style.display === "none" || descriptionElement.style.display === "") {
             descriptionElement.style.display = "block";
         } else {

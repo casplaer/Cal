@@ -7,8 +7,8 @@ namespace Cal.ViewModels
         [Display(Name = "Электронная почта")]
         [Required(ErrorMessage = "Необходимо ввести электронную почту.")]
         public string Email { get; set; }
-        [Required]
         [Display(Name = "Пароль")]
+        [Required(ErrorMessage = "Введите пароль.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required(ErrorMessage = "Подтвердите пароль")]

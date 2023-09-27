@@ -242,7 +242,7 @@
                         }
                         else
                         {
-                            <a asp-controller="Event" asp-action="Index" class="day-num" style="color:black">
+                            <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
                                 <div class="number">
                                     @nums[i][j]
                                 </div>

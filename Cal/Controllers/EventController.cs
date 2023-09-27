@@ -62,5 +62,18 @@ namespace Cal.Controllers
 
             return RedirectToAction("Index", "Event", new { date = createNewEvent.Date });
         }
+
+        public IActionResult DeleteEvent(int id)
+        {
+            var eventToDelete = _context.Events.Find(id);
+            var Date = eventToDelete.Date.Date;
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", new {date = Date});
+        }
     }
 }
