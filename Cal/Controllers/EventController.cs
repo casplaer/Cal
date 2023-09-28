@@ -23,7 +23,7 @@ namespace Cal.Controllers
             var events = await _context.Events
                 .Where(e => e.Date.Date == date.Date)
                 .ToListAsync();
-            HttpContext.Session.SetString("ShortDate" ,date.ToShortDateString());
+            HttpContext.Session.SetString("ShortDate", date.ToShortDateString());
             ViewBag.Date = date;
             return View(events);
         }
@@ -73,7 +73,39 @@ namespace Cal.Controllers
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index", new {date = Date});
+            return RedirectToAction("Index", new { date = Date });
+        }
+
+        [HttpGet]
+        [Route("Event/EditEvent")]
+
+        public IActionResult EditEvent(int id)
+        {
+            var Event = _context.Events.Find(id);
+            HttpContext.Session.SetInt32("EventId", id);
+            return View(Event);
+        }
+
+        [HttpPost]
+        [Route("Event/EditEvent")]
+        public IActionResult EditEvent(Event _event)
+        {
+            if (!ModelState.IsValid)
+                return View(_event);
+
+            var exist = _context.Events.Find(HttpContext.Session.GetInt32("EventId"));
+
+
+            exist.Name = _event.Name;
+            exist.Description = _event.Description;
+            exist.Date = _event.Date;
+
+            _context.SaveChanges();
+
+            HttpContext.Session.Remove("EventId");
+
+            return RedirectToAction("Index", new { date = exist.Date });
+
         }
     }
 }
