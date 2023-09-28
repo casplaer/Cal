@@ -1,7 +1,9 @@
 using Cal.Data;
 using Cal.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,34 +30,45 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
-/*builder.Services.AddIdentityCore<AppUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireDigit = false;
-})
-    .AddRoles<IdentityRole>()
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager<SignInManager<AppUser>>();*/
-
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    /*app.UseExceptionHandler(
+                    options =>
+                    {
+                        options.Run(
+                            async context =>
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                context.Response.ContentType = "text/html";
+                                var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                                if (null != exceptionObject)
+                                {
+                                    var errorMessage = $"<b>Exception Error: {exceptionObject.Error.Message} </b> {exceptionObject.Error.StackTrace}";
+                                    await context.Response.WriteAsync(errorMessage).ConfigureAwait(false);
+                                }
+                            });
+                    }
+                );*/
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseStatusCodePagesWithRedirects("/error/{0}");
+app.Map("/error/{statusCode}", (int statusCode) => $"Error. Status Code: {statusCode}");
+//app.UseStatusCodePages();
 
-
+/*app.Map("/error", app => app.Run(async context =>
+{
+    context.Response.StatusCode = 500;
+    await context.Response.WriteAsync("Error 500. NullReferenceException occurred!");
+}));*/
 
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

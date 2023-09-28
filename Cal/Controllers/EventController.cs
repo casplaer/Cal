@@ -21,7 +21,7 @@ namespace Cal.Controllers
         public async Task<IActionResult> Index(DateTime date)
         {
             var events = await _context.Events
-                .Where(e => e.Date.Date == date.Date)
+                .Where(e => e.Date.Date == date.Date && e.AppUser.Email == User.Identity.Name)
                 .ToListAsync();
             HttpContext.Session.SetString("ShortDate", date.ToShortDateString());
             ViewBag.Date = date;
@@ -82,6 +82,11 @@ namespace Cal.Controllers
         public IActionResult EditEvent(int id)
         {
             var Event = _context.Events.Find(id);
+
+            /*if (Event == null)
+            {
+                return RedirectToAction();
+            }*/
             HttpContext.Session.SetInt32("EventId", id);
             return View(Event);
         }
@@ -95,11 +100,17 @@ namespace Cal.Controllers
 
             var exist = _context.Events.Find(HttpContext.Session.GetInt32("EventId"));
 
+            try
+            {
+                exist.Name = _event.Name;
+                exist.Description = _event.Description;
+                exist.Date = _event.Date;
 
-            exist.Name = _event.Name;
-            exist.Description = _event.Description;
-            exist.Date = _event.Date;
-
+            }
+            catch(NullReferenceException ex)
+            {
+                
+            }
             _context.SaveChanges();
 
             HttpContext.Session.Remove("EventId");
