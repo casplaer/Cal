@@ -25,6 +25,10 @@ namespace Calendar.Controllers
             ViewBag.currentMonth = currentMonth;
             int currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
             ViewBag.currentYear = HttpContext.Session.GetInt32("currentYear") ?? DateTime.Now.Year;
+
+            ViewBag.Show = HttpContext.Session.GetString("true") ?? "false";
+
+            HttpContext.Session.Remove("true");
             if (_signInManager.IsSignedIn(User))
             {
                 List<Event> _events = _context.Events

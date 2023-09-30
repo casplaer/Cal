@@ -1,0 +1,88 @@
+﻿body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.calendar {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.month {
+    text-align: center;
+    background-color: black;
+    color: #fff;
+    padding: 10px;
+    border: 1px;
+    /*border-top-left-radius:7.5px;
+            border-top-right-radius:7.5px;*/
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    background-color: #eee;
+    padding: 10px;
+    position: relative;
+}
+
+.day {
+    text-align: center;
+    border: 2px solid #ccc;
+    padding: 10px;
+    /* border-radius: 7.5px;*/
+    border-color: black;
+}
+
+.day-num {
+    text-align: center;
+    border: 2px solid #ccc;
+    /*border-radius: 7.5px;*/
+    padding: 10px;
+    border-color: black;
+    width: 100%;
+    height: 125px;
+    text-align: right;
+    position: relative;
+    background-color: white;
+}
+
+.events {
+    width: 125px;
+    height: 125px;
+}
+
+.days .day-num .number {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding-right: 5px;
+}
+
+.days .day-num .text {
+    color: black;
+    text-align: left;
+    vertical-align: bottom;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+    .days .day-num .text .add {
+        color: black;
+        text-align: left;
+        vertical-align: bottom;
+        text-decoration: none;
+        position: relative;
+        bottom: -85px;
+        left: 0px;
+    }
+
+button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}

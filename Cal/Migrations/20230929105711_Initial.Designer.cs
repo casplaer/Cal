@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230927194630_changeEventModel2")]
-    partial class changeEventModel2
+    [Migration("20230929105711_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

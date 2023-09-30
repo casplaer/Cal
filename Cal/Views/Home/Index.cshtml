@@ -4,73 +4,9 @@
 @model IEnumerable<Event>
 
 @{
-    ViewData["Title"] = "Home";
-    List<string> months = new List<string>
-    {
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь", 
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь"
-    };
+    ViewData["Title"] = "Абоба";
 
-    int currentMonth = ViewBag.currentMonth;
-    int currentYear = ViewBag.currentYear;
 
-    DateTime firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
-
-    DayOfWeek dayOfWeek = firstDayOfMonth.DayOfWeek;
-
-    int daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
-    int counter = 1;
-    List<List<int?>> nums = new List<List<int?>>();
-
-    for(int i = 0; i < 5; ++i)
-    {
-        nums.Add(new List<int?>());
-        for(int j = 0; j < 7; ++j)
-        {
-            if (i == 0 && j < (int)dayOfWeek)
-            {
-                nums[i].Add(null);
-                counter--;
-            }
-            else if (i==4 && j > (int)new DateTime(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth)).DayOfWeek) nums[i].Add(null);
-            else nums[i].Add(counter);
-            counter++;
-        }
-    }
-
-    string GetText(DateTime date)
-    {
-        if (Model.Count(e => e.Date.Date == date.Date) == 0)
-        {
-            return "На сегодня ничего не запланировано. <a asp-controller='Event' asp-action='NewEvent'>Добавить событие.</a>";
-        }
-        else
-        {
-            return $"На сегодня событий: {Model.Count(e => e.Date.Date == date.Date) == 0}";
-        }
-    }
-
-    bool IsEvent(DateTime date)
-    {
-        if (Model.Count(e => e.Date.Date == date.Date) == 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
 
     DateTime toDate(string date)
     {
@@ -79,8 +15,8 @@
         if (a) return Date;
         else return Date;
     }
-}
 
+}
 
 <html lang="en">
 <head>
@@ -91,167 +27,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/homePage.css">
 
-    <style>
-        /* Стили для календаря */
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
 
-        .calendar {
-            width: 80%;
-            margin: 0 auto;
-            background-color:white;
-        }
-
-        .month {
-            text-align: center;
-            background-color:black;
-            color: #fff;
-            padding: 10px;
-            border: 1px;
-            /*border-top-left-radius:7.5px;
-            border-top-right-radius:7.5px;*/
-        }
-
-        .days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            background-color: #eee;
-            padding: 10px;
-            position: relative;
-        }
-
-        .day {
-            text-align: center;
-            border: 2px solid #ccc;
-            padding: 10px;
-           /* border-radius: 7.5px;*/
-           border-color: black;
-        }
-
-        .day-num {
-            text-align: center;
-            border: 2px solid #ccc;
-            /*border-radius: 7.5px;*/
-            padding: 10px;
-            border-color: black;
-            width: 100%;
-            height: 125px;
-            text-align: right;
-            position: relative;
-            background-color:white;
-        }
-
-        .events{
-            width: 125px;
-            height: 125px;
-        }
-
-        .days .day-num .number
-        {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            padding-right: 5px;
-        }
-
-        .days .day-num .text 
-        {
-            color:black;
-            text-align:left;
-            vertical-align:bottom;
-            position:absolute;
-            top:10px;
-            left:10px;
-        }
-
-        .days .day-num .text .add    
-        {
-            color: black;
-            text-align: left;
-            vertical-align:bottom;
-            text-decoration:none;
-            position: relative;
-            bottom: -85px;
-            left: 0px;
-        }
-
-        button {
-            background-color: black;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
+    @if(ViewBag.Show == "true")
+    {
+        <partial name="PopUpPartial" />
+    }
+
     <div class="calendar">
-        <div class="month">
-            <h1>@months[currentMonth-1] @currentYear</h1>
-            <form method="post">
-                <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="false">Предыдущий месяц</button>
-                <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="true">Следующий месяц</button>
-            </form>
-        </div>
-        <div class="days">
-            <div class="day">Вс</div>
-            <div class="day">Пн</div>
-            <div class="day">Вт</div>
-            <div class="day">Ср</div>
-            <div class="day">Чт</div>
-            <div class="day">Пт</div>
-            <div class="day">Сб</div>
-        </div>
-        @for (int i = 0; i < 5; ++i)
-        {
-            <div class="days" id="days">
-                @for(int j = 0; j < 7; ++j)
-                {
-                    if(nums[i][j]==null)
-                    {
-                        <div class="day" style="background-color:#f2f2f2">
-                            <div class="text">
-                                @nums[i][j]
-                            </div>
-                        </div>
-                    }
-                    else if(!SignInManager.IsSignedIn(User))
-                    {
-                        <div class="day-num">
-                            <div class="text">
-                                @nums[i][j]
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        var kal = toDate(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + nums[i][j].ToString());
-                        if (IsEvent(kal))
-                        {
-                            <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
-                                <div class="text">
-                                    Событий: @Model.Count(e=>e.Date.Date == kal)
-                                </div>
-                                <div class="number">
-                                    @nums[i][j]
-                                </div>
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@nums[i][j]" class="day-num" style="color:black">
-                                <div class="number">
-                                    @nums[i][j]
-                                </div>
-                            </a>
-                        }
-                    }
-                }
-            </div>
-        }
+        <partial name="HomePartials/_CalendarView">
+        <partial name="HomePartials/_EventView"/>
     </div>
 </body>
 </html>

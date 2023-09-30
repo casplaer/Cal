@@ -1,0 +1,37 @@
+﻿@{
+    List<string> months = new List<string>
+    {
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь"
+    };
+
+    int currentMonth = ViewBag.currentMonth;
+    int currentYear = ViewBag.currentYear;
+}
+    
+<div class="month">
+    <h1>@months[currentMonth - 1] @currentYear</h1>
+    <form method="post">
+        <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="false">Предыдущий месяц</button>
+        <button type="submit" asp-controller="Home" asp-action="Month" asp-route-plus="true">Следующий месяц</button>
+    </form>
+</div>
+<div class="days">
+    <div class="day">Вс</div>
+    <div class="day">Пн</div>
+    <div class="day">Вт</div>
+    <div class="day">Ср</div>
+    <div class="day">Чт</div>
+    <div class="day">Пт</div>
+    <div class="day">Сб</div>
+</div>

@@ -86,6 +86,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapFallbackToController("Error", "Error");
+
 app.MapRazorPages();
 
 app.Run();

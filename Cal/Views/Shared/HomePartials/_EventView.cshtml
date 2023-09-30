@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> _signInManager
+@model IEnumerable<Event>
+@{
+    int currentYear = ViewBag.currentYear;
+    int currentMonth = ViewBag.currentMonth;
+
+    DateTime firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
+
+    // Определяем день недели первого дня месяца.
+    int firstDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+
+    // Определяем количество дней в месяце.
+    int daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+
+    // Определяем количество недель в таблице календаря.
+    int totalWeeks = (int)Math.Ceiling((daysInMonth + firstDayOfWeek) / 7.0);
+
+    // Создаем двумерный массив для хранения номеров дней в месяце.
+    List<List<int?>> calendarTable = new List<List<int?>>(totalWeeks);
+    int currentDay = 1;
+
+    for (int week = 0; week < totalWeeks; week++)
+    {
+        List<int?> weekDays = new List<int?>(7);
+
+        for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++)
+        {
+            if ((week == 0 && dayOfWeek < firstDayOfWeek) || currentDay > daysInMonth)
+            {
+                weekDays.Add(null); // Пустая ячейка, если день не принадлежит месяцу.
+            }
+            else
+            {
+                weekDays.Add(currentDay); // Номер дня месяца.
+                currentDay++;
+            }
+        }
+
+        calendarTable.Add(weekDays);
+    }
+
+    //Есть события? А если найду?
+    bool IsEvent(DateTime date)
+    {
+        if (Model.Count(e => e.Date.Date == date.Date) == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+}
+
+
+@for (int i = 0; i < 5; ++i)
+{
+    <div class="days" id="days">
+        @for (int j = 0; j < 7; ++j)
+        {
+            if (calendarTable[i][j] == null)
+            {
+                <div class="day" style="background-color:#f2f2f2">
+                    <div class="text">
+                        @calendarTable[i][j]
+                    </div>
+                </div>
+            }
+            else if (!_signInManager.IsSignedIn(User))
+            {
+                <div class="day-num">
+                    <div class="text">
+                        @calendarTable[i][j]
+                    </div>
+                </div>
+            }
+            else
+            {
+                //Переменная для проверки наличия событий в конкретной день.
+                var DateToCheckEvent = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
+                if (IsEvent(DateToCheckEvent))
+                {
+                    <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
+                        <div class="text">
+                            Событий: @Model.Count(e=>e.Date.Date == DateToCheckEvent)
+                        </div>
+                        <div class="number">
+                            @calendarTable[i][j]
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
+                        <div class="number">
+                            @calendarTable[i][j]
+                        </div>
+                    </a>
+                }
+            }
+        }
+    </div>
+}

@@ -54,10 +54,10 @@ namespace Cal.Controllers
                 Description = newEvent.Description,
                 AppUser = user,
                 UserId = user.Id,
-                //Id = _context.Events.Count()
             };
 
-            var newEventResponse = _context.Events.Add(createNewEvent);
+            var aaa = createNewEvent.AppUser;
+            _context.Events.Add(createNewEvent);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Event", new { date = createNewEvent.Date });
