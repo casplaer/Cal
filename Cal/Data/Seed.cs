@@ -28,27 +28,33 @@ namespace Cal.Data
                     {
                         new Models.Event()
                         {
-                            Date = new DateTime(2023, 9, 19),
+                            Date = new DateTime(2023, 10, 19),
                             Name = "TestEvent1",
                             Description = "TestDescription1",
                             AppUser = user,
-                            UserId = user.Id
+                            UserId = user.Id,
+                            Category = "Тестовая категория",
+                            CategoryColor = "#000000",
                         },
                         new Models.Event()
                         {
-                            Date = new DateTime(2023, 9, 20),
+                            Date = new DateTime(2023, 10, 20),
                             Name = "TestEvent2",
                             Description = "TestDescription2",
                             AppUser = user,
-                            UserId = user.Id
+                            UserId = user.Id,
+                            Category = "Тестовая категория 2",
+                            CategoryColor = "#000000",
                         },
                         new Models.Event()
                         {
-                            Date = new DateTime(2023, 9, 20),
+                            Date = new DateTime(2023, 10, 20),
                             Name = "TestEvent3",
                             Description = "TestDescription3",
                             AppUser = user,
-                            UserId = user.Id
+                            UserId = user.Id,
+                            Category = "Тестовая категория 3",
+                            CategoryColor = "#000000",
                         }
                     });
                 context.SaveChanges();

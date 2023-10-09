@@ -84,7 +84,7 @@
                 {
                     <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
                         <div class="text">
-                            Событий: @Model.Count(e=>e.Date.Date == DateToCheckEvent)
+                            <div style="width: 100px; height: 100px; background-color: @Model.;"></div>: @Model.Count(e=>e.Date.Date == DateToCheckEvent)
                         </div>
                         <div class="number">
                             @calendarTable[i][j]
