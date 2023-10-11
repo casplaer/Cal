@@ -20,6 +20,20 @@
     List<List<int?>> calendarTable = new List<List<int?>>(totalWeeks);
     int currentDay = 1;
 
+    List<string> uniqueCategories;
+
+    if (Model is not null)
+    {
+        uniqueCategories = Model.Select(e => e.Category).Distinct().ToList();
+
+        List<List<string>> categories;
+
+        foreach(var c in uniqueCategories)
+        {
+            
+        }
+    }
+
     for (int week = 0; week < totalWeeks; week++)
     {
         List<int?> weekDays = new List<int?>(7);
