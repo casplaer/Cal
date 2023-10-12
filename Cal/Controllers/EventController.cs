@@ -2,6 +2,7 @@
 using Cal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -33,6 +34,8 @@ namespace Cal.Controllers
         {
             DateTime aboba;
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out aboba);
+            ViewBag.Categories = new SelectList(_context.Events.Select(e => e.Category).Distinct().ToList());
+            ViewBag.Colors = new SelectList(_context.Events.Select(e => e.CategoryColor).Distinct().ToList());
             Event lol = new Event()
             {
                 Date = aboba,
@@ -45,15 +48,20 @@ namespace Cal.Controllers
         {
             if (!ModelState.IsValid)
                 return View(newEvent);
-
+            DateTime passing;
+            DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out passing);
+            TimeSpan ts = new TimeSpan(Convert.ToInt16(newEvent.Date.Hour), Convert.ToInt16(newEvent.Date.Minute), 0);
+            passing = passing.Date + ts;
             var user = await userManager.FindByEmailAsync("user@mail.ru");
             var createNewEvent = new Event()
             {
-                Date = newEvent.Date,
+                Date = passing,
                 Name = newEvent.Name,
                 Description = newEvent.Description,
                 AppUser = user,
                 UserId = user.Id,
+                Category = newEvent.Category,
+                CategoryColor = newEvent.CategoryColor,
             };
 
             var aaa = createNewEvent.AppUser;
