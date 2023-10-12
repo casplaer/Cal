@@ -1,0 +1,8 @@
+﻿.panel{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.checkbox-item {
+    margin-right:20px
+}

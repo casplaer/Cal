@@ -44,7 +44,7 @@ namespace Cal.Data
                             AppUser = user,
                             UserId = user.Id,
                             Category = "Тестовая категория 2",
-                            CategoryColor = "#000000",
+                            CategoryColor = "#d12c7c",
                         },
                         new Models.Event()
                         {
@@ -54,7 +54,7 @@ namespace Cal.Data
                             AppUser = user,
                             UserId = user.Id,
                             Category = "Тестовая категория 3",
-                            CategoryColor = "#000000",
+                            CategoryColor = "#712cd1",
                         }
                     });
                 context.SaveChanges();

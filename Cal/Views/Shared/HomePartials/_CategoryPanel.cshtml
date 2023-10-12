@@ -1,0 +1,17 @@
+﻿@{
+    List<string> uniqueCategories = ViewBag.CategoryColorList;
+    List<string> categoryList = ViewBag.CategoryList;
+}
+
+<div class="panel">
+    @for (var i = 0; i < ViewBag.CategoryList.Count; i++)
+    {
+        <div class="checkbox-item">
+            <label>
+                <input type="checkbox" name="selectedCategories" value="@ViewBag.CategoryColorList[i]" style="accent-color:@uniqueCategories[i]"
+                       data-category-color="@uniqueCategories[i]" onchange="update(this)" checked/>
+                @ViewBag.CategoryList[i]
+            </label>
+        </div>
+    }
+</div>

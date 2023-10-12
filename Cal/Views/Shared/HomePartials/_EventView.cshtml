@@ -20,18 +20,22 @@
     List<List<int?>> calendarTable = new List<List<int?>>(totalWeeks);
     int currentDay = 1;
 
-    List<string> uniqueCategories;
+    List<List<Event>> eventsByCategories = new List<List<Event>>();
+
+    List<string> uniqueCategories = new List<string>();
 
     if (Model is not null)
     {
-        uniqueCategories = Model.Select(e => e.Category).Distinct().ToList();
+        uniqueCategories = Model.Select(e => e.CategoryColor).Distinct().ToList();
 
-        List<List<string>> categories;
-
-        foreach(var c in uniqueCategories)
+        foreach (var c in uniqueCategories)
         {
-            
+            List<Event> eventsWithCategoryC = Model.Where(e => e.Category == c).ToList();
+            eventsByCategories.Add(eventsWithCategoryC);
         }
+
+        ViewBag.CategoryColorList = uniqueCategories;
+        ViewBag.CategoryList = Model.Select(e => e.Category).Distinct().ToList();
     }
 
     for (int week = 0; week < totalWeeks; week++)
@@ -68,52 +72,76 @@
     }
 }
 
-
-@for (int i = 0; i < 5; ++i)
-{
-    <div class="days" id="days">
-        @for (int j = 0; j < 7; ++j)
+<script>
+    function update(category)
+    {
+        var _category = category.value;
+        if(category.checked == false)
         {
-            if (calendarTable[i][j] == null)
+            document.getElementById("category-text-" + _category).style.display = "none";
+            document.getElementById("color-square-" + _category).style.display = "none";
+        }
+        else
+        {
+            document.getElementById("color-square-" + _category).style.display = "block";
+            document.getElementById("category-text-" + _category).style.display = "block";
+        }
+    }
+</script>
+
+<div class="calendar-grid">
+    @for (int i = 0; i < 5; ++i)
+    {
+        <div class="days" id="days">
+            @for (int j = 0; j < 7; ++j)
             {
-                <div class="day" style="background-color:#f2f2f2">
-                    <div class="text">
-                        @calendarTable[i][j]
-                    </div>
-                </div>
-            }
-            else if (!_signInManager.IsSignedIn(User))
-            {
-                <div class="day-num">
-                    <div class="text">
-                        @calendarTable[i][j]
-                    </div>
-                </div>
-            }
-            else
-            {
-                //Переменная для проверки наличия событий в конкретной день.
-                var DateToCheckEvent = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
-                if (IsEvent(DateToCheckEvent))
+                if (calendarTable[i][j] == null)
                 {
-                    <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
+                    <div class="day" style="background-color:#f2f2f2">
                         <div class="text">
-                            <div style="width: 100px; height: 100px; background-color: @Model.;"></div>: @Model.Count(e=>e.Date.Date == DateToCheckEvent)
+                            @calendarTable[i][j]
                         </div>
+                    </div>
+                }
+                else if (!_signInManager.IsSignedIn(User))
+                {
+                    <div class="day-num">
                         <div class="number">
                             @calendarTable[i][j]
                         </div>
-                    </a>
+                    </div>
                 }
                 else
                 {
+                    //Переменная для проверки наличия событий в конкретной день.
+                    var DateToCheckEvent = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
+
+                    var eventsOnDate = Model.Where(e => e.Date.Date == DateToCheckEvent.Date).ToList();
+
                     <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
+                        @foreach (var c in uniqueCategories)
+                        {
+                            if (IsEvent(DateToCheckEvent) && Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c) != 0)
+                            {
+                                <div class="event-container">
+                                    <div id="color-square-@c" class="color-square" style="background-color:@c"></div>
+                                    <div id="category-text-@c" class="text">: @Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c)</div>
+                                </div>
+                            }
+                        }
                         <div class="number">
                             @calendarTable[i][j]
                         </div>
                     </a>
                 }
             }
-        }
+        </div>
+    }
+</div>
+@if (Model is not null)
+{
+    <div class="category-column">
+        <partial name ="HomePartials/_CategoryPanel"/>
     </div>
 }
+
