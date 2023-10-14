@@ -8,12 +8,7 @@ namespace Cal.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [Display(Name = "Цвет категории")]
-        public string CategoryColor { get; set; }
-        
-        [Display(Name = "Категория")]
-        public string Category { get; set; }
+        public Category Category { get; set; }
         public AppUser? AppUser { get; set; }
         [ForeignKey("UserId")]
         public string? UserId { get; set; }

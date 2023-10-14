@@ -34,12 +34,21 @@ namespace Cal.Controllers
         {
             DateTime aboba;
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out aboba);
-            ViewBag.Categories = new SelectList(_context.Events.Select(e => e.Category).Distinct().ToList());
-            ViewBag.Colors = new SelectList(_context.Events.Select(e => e.CategoryColor).Distinct().ToList());
+
+            // Создайте словарь для соответствия категорий и их цветов.
+            Dictionary<string, string> categoryColorDictionary = _context.Events
+                .GroupBy(e => e.Category)
+                .ToDictionary(g => g.Key, g => g.First().CategoryColor);
+
+            ViewBag.CategoryColorDictionary = categoryColorDictionary;
+
+            // Вместо создания SelectList для категорий и цветов, теперь вы передаете словарь в представление.
+
             Event lol = new Event()
             {
                 Date = aboba,
             };
+
             return View(lol);
         }
 
@@ -48,11 +57,21 @@ namespace Cal.Controllers
         {
             if (!ModelState.IsValid)
                 return View(newEvent);
+
             DateTime passing;
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out passing);
             TimeSpan ts = new TimeSpan(Convert.ToInt16(newEvent.Date.Hour), Convert.ToInt16(newEvent.Date.Minute), 0);
             passing = passing.Date + ts;
+
             var user = await userManager.FindByEmailAsync("user@mail.ru");
+
+            // Получите цвет категории из словаря на основе выбранной категории.
+            Dictionary<string, string> categoryColorDictionary = _context.Events
+                .GroupBy(e => e.Category)
+                .ToDictionary(g => g.Key, g => g.First().CategoryColor);
+
+            var categoryColor = categoryColorDictionary[newEvent.Category];
+
             var createNewEvent = new Event()
             {
                 Date = passing,
@@ -61,15 +80,15 @@ namespace Cal.Controllers
                 AppUser = user,
                 UserId = user.Id,
                 Category = newEvent.Category,
-                CategoryColor = newEvent.CategoryColor,
+                CategoryColor = categoryColor,
             };
 
-            var aaa = createNewEvent.AppUser;
             _context.Events.Add(createNewEvent);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Event", new { date = createNewEvent.Date });
         }
+
 
         public IActionResult DeleteEvent(int id)
         {

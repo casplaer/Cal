@@ -28,6 +28,12 @@ namespace Calendar.Controllers
 
             ViewBag.Show = HttpContext.Session.GetString("true") ?? "false";
 
+            Dictionary<string, string> categoryColorDictionary = _context.Events
+               .GroupBy(e => e.Category)
+               .ToDictionary(g => g.Key, g => g.First().CategoryColor);
+
+            ViewBag.CategoryColorDictionary = categoryColorDictionary;
+
             HttpContext.Session.Remove("true");
             if (_signInManager.IsSignedIn(User))
             {

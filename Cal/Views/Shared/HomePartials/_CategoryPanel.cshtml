@@ -1,16 +1,17 @@
 ﻿@{
-    List<string> uniqueCategories = ViewBag.CategoryColorList;
-    List<string> categoryList = ViewBag.CategoryList;
+    Dictionary<string, string> categoryColorDictionary = ViewBag.CategoryColorDictionary;
 }
 
 <div class="panel">
-    @for (var i = 0; i < ViewBag.CategoryList.Count; i++)
+    @foreach (var category in categoryColorDictionary)
     {
+        var categoryName = category.Key;
+        var categoryColor = category.Value;
         <div class="checkbox-item">
             <label>
-                <input type="checkbox" name="selectedCategories" value="@ViewBag.CategoryColorList[i]" style="accent-color:@uniqueCategories[i]"
-                       data-category-color="@uniqueCategories[i]" onchange="update(this)" checked/>
-                @ViewBag.CategoryList[i]
+                <input type="checkbox" name="selectedCategories" value="@categoryName" style="accent-color:@categoryColor"
+                       data-category-color="@categoryColor" onchange="update(this)" checked />
+                @categoryName
             </label>
         </div>
     }

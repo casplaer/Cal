@@ -24,7 +24,9 @@
 
     List<string> uniqueCategories = new List<string>();
 
-    if (Model is not null)
+    var categoryColorDictionary = ViewBag.CategoryColorDictionary as Dictionary<string, string>;
+
+    /*if (Model is not null)
     {
         uniqueCategories = Model.Select(e => e.CategoryColor).Distinct().ToList();
 
@@ -36,7 +38,7 @@
 
         ViewBag.CategoryColorList = uniqueCategories;
         ViewBag.CategoryList = Model.Select(e => e.Category).Distinct().ToList();
-    }
+    }*/
 
     for (int week = 0; week < totalWeeks; week++)
     {
@@ -109,8 +111,8 @@
                             if (IsEvent(DateToCheckEvent) && Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c) != 0)
                             {
                                 <div class="event-container">
-                                    <div id="color-square-@c" class="color-square" style="background-color:@c"></div>
-                                    <div id="category-text-@c" class="text">: @Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c)</div>
+                                    <div class="color-square color-square-@c" style="background-color:@c"></div>
+                                    <div class="text category-text-@c">: @Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c)</div>
                                 </div>
                             }
                         }

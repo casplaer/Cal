@@ -28,6 +28,13 @@
         document.getElementById('addCategoryButton').style.display = 'block';
         document.getElementById('backButton').style.display = 'none';
     }
+
+    function updateCategory(category) 
+    {
+        var selectedValue = category.value;
+
+
+    }
 </script>
 
 <div class="row">
@@ -62,12 +69,20 @@
                         <span asp-validation-for="Date" class="text-danger"></span>
                     </div>
 
+                    <!--Выбор категории.-->
                     <div class="form-group" id ="chooseCategory">
                         <label asp-for="Category" class="control-label">Категория</label>
-                        <select asp-for="Category" asp-items="ViewBag.Categories" class="form-control">
+                        <select asp-for="Category" asp-items="ViewBag.Categories" class="form-control" onchange="updateCategory(this)">
                             <option value="">Выберите категорию</option>
                         </select>
                     </div>
+
+                    <div style="display:none" class="form-group">
+                        <label asp-for="CategoryColor" class="control-label"></label>
+                        <input asp-for="CategoryColor" type="color" class="form-control"/>
+                        <span asp-validation-for="CategoryColor" class="text-danger"></span>
+                    </div>
+
 
                     <button id="addCategoryButton" style="color:black; width:50px; background-color:white;" type="button" onclick="closeC()">
                         +
