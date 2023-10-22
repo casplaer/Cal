@@ -2,6 +2,7 @@
 using Cal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace Calendar.Controllers
@@ -28,18 +29,14 @@ namespace Calendar.Controllers
 
             ViewBag.Show = HttpContext.Session.GetString("true") ?? "false";
 
-            Dictionary<string, string> categoryColorDictionary = _context.Events
-               .GroupBy(e => e.Category)
-               .ToDictionary(g => g.Key, g => g.First().CategoryColor);
-
-            ViewBag.CategoryColorDictionary = categoryColorDictionary;
-
             HttpContext.Session.Remove("true");
             if (_signInManager.IsSignedIn(User))
             {
                 List<Event> _events = _context.Events
                     .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear && e.AppUser.Email == User.Identity.Name)
                     .ToList();
+                    List<Category> Categories = _context.Events.Select(e => e.Category).Distinct().ToList();
+                    ViewBag.Categories = Categories;
                 return View(_events);
             }
             else return View();

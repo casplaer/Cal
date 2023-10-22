@@ -19,11 +19,44 @@ namespace Cal.Data
                     Id = context.Users.Count().ToString()
                 };
                 await userManager.CreateAsync(user, "123456");
+
+                context.SaveChanges();
+            }
+
+            if(!context.Categories.Any())
+            {
+                context.Categories.AddRange(new List<Models.Category>()
+                {
+                    new Models.Category()
+                    {
+                        CategoryName = "Тестовая категория",
+                        CategoryColor = "#000000",
+                        CategoryId = 1
+                    },
+                    new Models.Category()
+                    {
+                        CategoryName = "Тестовая категория 2",
+                        CategoryColor = "#d12c7c",
+                        CategoryId = 2
+                    },
+                    new Models.Category()
+                    {
+                        CategoryName = "Тестовая категория 3",
+                        CategoryColor = "#712cd1",
+                        CategoryId = 3
+                    }
+                });
+                context.SaveChanges();
             }
 
             if (!context.Events.Any())
             {
                 var user = await userManager.FindByEmailAsync("user@mail.ru");
+
+                var category1 = context.Categories.FirstOrDefault(c => c.CategoryName == "Тестовая категория");
+                var category2 = context.Categories.FirstOrDefault(c => c.CategoryName == "Тестовая категория 2");
+                var category3 = context.Categories.FirstOrDefault(c => c.CategoryName == "Тестовая категория 3");
+
                 context.Events.AddRange(new List<Models.Event>()
                     {
                         new Models.Event()
@@ -33,8 +66,7 @@ namespace Cal.Data
                             Description = "TestDescription1",
                             AppUser = user,
                             UserId = user.Id,
-                            Category = "Тестовая категория",
-                            CategoryColor = "#000000",
+                            Category = category1,
                         },
                         new Models.Event()
                         {
@@ -43,8 +75,7 @@ namespace Cal.Data
                             Description = "TestDescription2",
                             AppUser = user,
                             UserId = user.Id,
-                            Category = "Тестовая категория 2",
-                            CategoryColor = "#d12c7c",
+                            Category = category2,
                         },
                         new Models.Event()
                         {
@@ -53,8 +84,7 @@ namespace Cal.Data
                             Description = "TestDescription3",
                             AppUser = user,
                             UserId = user.Id,
-                            Category = "Тестовая категория 3",
-                            CategoryColor = "#712cd1",
+                            Category = category3,
                         }
                     });
                 context.SaveChanges();

@@ -12,5 +12,6 @@ namespace Cal.Data
         }
 
         public DbSet<Event> Events { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

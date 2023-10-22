@@ -24,7 +24,7 @@
 
     List<string> uniqueCategories = new List<string>();
 
-    var categoryColorDictionary = ViewBag.CategoryColorDictionary as Dictionary<string, string>;
+    var categories = ViewBag.Categories as List<Category>;
 
     /*if (Model is not null)
     {
@@ -106,13 +106,13 @@
                     var eventsOnDate = Model.Where(e => e.Date.Date == DateToCheckEvent.Date).ToList();
 
                     <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
-                        @foreach (var c in uniqueCategories)
+                        @foreach (var c in categories)
                         {
-                            if (IsEvent(DateToCheckEvent) && Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c) != 0)
+                            if (IsEvent(DateToCheckEvent) && Model.Count(e => e.Date.Date == DateToCheckEvent && e.Category.CategoryColor == c.CategoryColor) != 0)
                             {
                                 <div class="event-container">
-                                    <div class="color-square color-square-@c" style="background-color:@c"></div>
-                                    <div class="text category-text-@c">: @Model.Count(e => e.Date.Date == DateToCheckEvent && e.CategoryColor == c)</div>
+                                    <div class="color-square color-square-@c.CategoryColor" style="background-color:@c.CategoryColor"></div>
+                                    <div class="text category-text-@c.CategoryName">: @Model.Count(e => e.Date.Date == DateToCheckEvent && e.Category.CategoryName == c.CategoryName)</div>
                                 </div>
                             }
                         }
