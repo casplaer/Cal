@@ -31,19 +31,16 @@ namespace Cal.Data
                     {
                         CategoryName = "Тестовая категория",
                         CategoryColor = "#000000",
-                        CategoryId = 1
                     },
                     new Models.Category()
                     {
                         CategoryName = "Тестовая категория 2",
                         CategoryColor = "#d12c7c",
-                        CategoryId = 2
                     },
                     new Models.Category()
                     {
                         CategoryName = "Тестовая категория 3",
                         CategoryColor = "#712cd1",
-                        CategoryId = 3
                     }
                 });
                 context.SaveChanges();

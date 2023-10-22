@@ -100,7 +100,7 @@
                 }
                 else
                 {
-                    //Переменная для проверки наличия событий в конкретной день.
+                    //Переменная для проверки наличия событий в конкретный день.
                     var DateToCheckEvent = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
 
                     var eventsOnDate = Model.Where(e => e.Date.Date == DateToCheckEvent.Date).ToList();

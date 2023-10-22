@@ -36,7 +36,7 @@ namespace Cal.Controllers
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out aboba);
 
             // Создайте словарь для соответствия категорий и их цветов.
-            ViewBag.Categories = new SelectList(_context.Events.Select(e => e.Category).Distinct().ToList());
+            ViewBag.Categories = new SelectList(_context.Categories.Distinct().ToList());
 
             // Вместо создания SelectList для категорий и цветов, теперь вы передаете словарь в представление.
 
@@ -71,7 +71,6 @@ namespace Cal.Controllers
                 AppUser = user,
                 UserId = user.Id,
                 Category = newEvent.Category,
-
             };
 
             _context.Events.Add(createNewEvent);
