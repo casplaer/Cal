@@ -36,7 +36,7 @@ namespace Cal.Controllers
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out aboba);
 
             // Создайте словарь для соответствия категорий и их цветов.
-            ViewBag.Categories = new SelectList(_context.Categories.Distinct().ToList());
+            ViewBag.Categories = _context.Categories.Distinct().ToList();
 
             // Вместо создания SelectList для категорий и цветов, теперь вы передаете словарь в представление.
 
@@ -59,6 +59,8 @@ namespace Cal.Controllers
             TimeSpan ts = new TimeSpan(Convert.ToInt16(newEvent.Date.Hour), Convert.ToInt16(newEvent.Date.Minute), 0);
             passing = passing.Date + ts;
 
+            var cat = _context.Categories.Find(newEvent.Category.CategoryName);
+
             var user = await userManager.FindByEmailAsync("user@mail.ru");
 
             // Получите цвет категории из словаря на основе выбранной категории.
@@ -70,7 +72,7 @@ namespace Cal.Controllers
                 Description = newEvent.Description,
                 AppUser = user,
                 UserId = user.Id,
-                Category = newEvent.Category,
+                Category = cat,
             };
 
             _context.Events.Add(createNewEvent);

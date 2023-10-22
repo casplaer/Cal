@@ -2,7 +2,11 @@
 @{
     ViewData["Title"] = "Новое событие.";
     List<Category> categories = ViewBag.Categories;
-    SelectList CategoryName = new SelectList(categories.Select(e=>e.CategoryName).Distinct().ToList());
+    SelectList CategoryName = new SelectList(new List<Category>());
+    if(categories != null)
+    {
+        CategoryName = new SelectList(categories.Select(e=>e.CategoryName).Distinct().ToList());
+    }
 }
 
 @if (Model is not null)
@@ -34,9 +38,14 @@
     function updateCategory(category) 
     {
         var selectedValue = category.value;
-        var categoryIdInput = document.querySelector('input[name="Category.CategoryId"]');
-        categoryIdInput.value = newValue;
-
+        var categoryIdInput = document.getElementById("CategoryId");
+        for (var i = 0; i < categories.length; i++) 
+        {
+            if (categories[i].CategoryName === name) 
+            {
+                categoryIdInput.value = categories[i];
+            }
+        }
     }
 </script>
 
@@ -80,7 +89,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group" style="display:none">
+                    <div class="form-group" style="display:none" id="CategoryId">
                         <input asp-for="Category.CategoryId" class="form-control" />
                     </div>
 
