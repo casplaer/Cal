@@ -1,0 +1,27 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Новая категория";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <form asp-action="NewCategory">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CategoryName" class="control-label"></label>
+                    <input asp-for="CategoryName" style="width:40%" class="form-control" placeholder="Введите название категории" maxlength="200"/>
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryColor" class="control-label"></label>
+                    <input asp-for="CategoryColor" style="width:40%" class="form-control" type="color" />
+                    <span asp-validation-for="CategoryColor" class="text-danger"></span>
+                </div>
+
+            <div class="form-group">
+                <input class="btn btn-outline-success float-right" type="submit" value="Добавить категорию" />
+                <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>

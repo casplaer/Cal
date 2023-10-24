@@ -2,9 +2,7 @@
 using Cal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Cal.Controllers
 {
@@ -59,12 +57,10 @@ namespace Cal.Controllers
             TimeSpan ts = new TimeSpan(Convert.ToInt16(newEvent.Date.Hour), Convert.ToInt16(newEvent.Date.Minute), 0);
             passing = passing.Date + ts;
 
-            var cat = _context.Categories.Find(newEvent.Category.CategoryName);
-
             var user = await userManager.FindByEmailAsync("user@mail.ru");
 
-            // Получите цвет категории из словаря на основе выбранной категории.
-            
+            var trueCategory = _context.Categories.FirstOrDefault(c=>c.CategoryName==newEvent.Category.CategoryName);
+
             var createNewEvent = new Event()
             {
                 Date = passing,
@@ -72,7 +68,7 @@ namespace Cal.Controllers
                 Description = newEvent.Description,
                 AppUser = user,
                 UserId = user.Id,
-                Category = cat,
+                Category = trueCategory,
             };
 
             _context.Events.Add(createNewEvent);

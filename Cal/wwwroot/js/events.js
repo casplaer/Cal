@@ -22,7 +22,7 @@
             categoryColorElements[i].style.display = "block";
             categoryColorElements[i].style.backgroundColor = categoryColor;
         }
-        for (var i = 0; i < categoryTextElements.length; i++)
+        for (var i = 0; i < categoryColorElements.length; i++)
         {
             categoryTextElements[i].style.display = "block";
         }

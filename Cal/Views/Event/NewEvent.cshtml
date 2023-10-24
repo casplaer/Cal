@@ -7,6 +7,11 @@
     {
         CategoryName = new SelectList(categories.Select(e=>e.CategoryName).Distinct().ToList());
     }
+
+    Category create(string categoryName, string categoryColor)
+    {
+        return new Category() { CategoryColor = categoryColor, CategoryName = categoryName };
+    }
 }
 
 @if (Model is not null)
@@ -37,17 +42,27 @@
 
     function updateCategory(category) 
     {
-        var selectedValue = category.value;
-        var categoryIdInput = document.getElementById("CategoryId");
-        for (var i = 0; i < categories.length; i++) 
-        {
-            if (categories[i].CategoryName === name) 
-            {
-                categoryIdInput.value = categories[i];
-            }
-        }
+        var a = document.getElementById("chooseCategory");
+        a.value = category.value;
     }
 </script>
+
+<style>
+    .rounded-button {
+        display: inline-block;
+        width: 100px;
+        height: 38px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #fff; /* Белый фон кнопки */
+        color: #000; /* Цвет текста кнопки (черный) */
+        border: 1px solid #b8b8b8; /* Черные границы */
+        border-radius: 4px; /* Закругленные углы */
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+</style>
 
 <div class="row">
     <div class="col-md-6 offset-3">
@@ -81,46 +96,19 @@
                         <span asp-validation-for="Date" class="text-danger"></span>
                     </div>
 
-                    <!--Выбор категории.-->
-                    <div class="form-group" id ="chooseCategory">
-                        <label asp-for="Category.CategoryName" class="control-label">Категория</label>
-                        <select asp-for="Category.CategoryName" asp-items="CategoryName" class="form-control" onchange="updateCategory(this)">
-                            <option value="">Выберите категорию</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="display:none" id="CategoryId">
-                        <input asp-for="Category.CategoryId" class="form-control" />
-                    </div>
-
-                    <div style="display:none" class="form-group">
-                        <label asp-for="Category.CategoryColor" class="control-label"></label>
-                        <input asp-for="Category.CategoryColor" type="color" class="form-control"/>
-                        <span asp-validation-for="Category.CategoryColor" class="text-danger"></span>
-                    </div>
-
-
-                    <button id="addCategoryButton" style="color:black; width:50px; background-color:white;" type="button" onclick="closeC()">
-                        +
-                    </button>
-
-                    <div id="newCategoryForm" style="display:none">
-                        <div class="form-group">
-                            <label asp-for="Category.CategoryName" class="control-label"></label>
-                            <input asp-for="Category.CategoryName" class="form-control" />
-                            <span asp-validation-for="Category.CategoryName" class="text-danger"></span>
+                     <label asp-for="Category" class="control-label" style="flex: 1;">Категория</label>
+                    <div class="form-group" id="chooseCategory" style="display: flex;">
+                        <div style="flex: 2; 120%;">
+                            <select asp-for="Category.CategoryName" asp-items="CategoryName" class="form-control">
+                                <option value="">Выберите категорию</option>
+                            </select>
                         </div>
-
-                        <div class="form-group">
-                            <label asp-for="Category.CategoryColor" class="control-label"></label>
-                            <input asp-for="Category.CategoryColor" type="color" class="form-control" />
-                            <span asp-validation-for="Category.CategoryColor" class="text-danger"></span>
+                        <div style="text-align:center; text-decoration:none; flex: 1; display: flex; align-items: center; justify-content: center;">
+                            <a asp-controller="Category" asp-action="Index" class="form-control">
+                                +
+                            </a>
                         </div>
                     </div>
-
-                    <button id="backButton" type="button" style="display:none;color:black; background-color:white;" onclick="backC()">
-                        Выбрать сущетсвующую категорию
-                    </button>
 
                     <br/>
 
