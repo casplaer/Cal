@@ -26,20 +26,6 @@
 
     var categories = ViewBag.Categories as List<Category>;
 
-    /*if (Model is not null)
-    {
-        uniqueCategories = Model.Select(e => e.CategoryColor).Distinct().ToList();
-
-        foreach (var c in uniqueCategories)
-        {
-            List<Event> eventsWithCategoryC = Model.Where(e => e.Category == c).ToList();
-            eventsByCategories.Add(eventsWithCategoryC);
-        }
-
-        ViewBag.CategoryColorList = uniqueCategories;
-        ViewBag.CategoryList = Model.Select(e => e.Category).Distinct().ToList();
-    }*/
-
     for (int week = 0; week < totalWeeks; week++)
     {
         List<int?> weekDays = new List<int?>(7);

@@ -4,6 +4,13 @@
 }
 
 <style>
+    .category-color {
+        width: 20px; /* Ширина элемента */
+        height: 20px; /* Высота элемента */
+        margin-right: 10px; /* Расстояние между элементом и временем события */
+        flex-shrink: 0; /* Запрет уменьшения элемента при ограничении ширины */
+    }
+
     ul {
         list-style-type: none;
         padding: 0;
@@ -49,6 +56,7 @@ else
         @foreach (var Event in Model.OrderBy(e => e.Date))
         {
             <li style="display: flex; align-items: center;">
+                <div class="category-color" style="background-color: @Event.Category.CategoryColor;"></div>
                 <span>@Event.Date.ToShortTimeString()</span>
                 <a style="color: black; text-decoration: none; cursor: pointer;" onclick="toggleDescription(@Event.Id)">@Event.Name</a>
                 <div style="flex-grow: 1;"></div> <!-- Этот элемент занимает всю доступную ширину и создает пространство между названием и описанием -->

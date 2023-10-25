@@ -20,6 +20,7 @@ namespace Cal.Controllers
         public async Task<IActionResult> Index(DateTime date)
         {
             var events = await _context.Events
+                .Include(e => e.Category)
                 .Where(e => e.Date.Date == date.Date && e.AppUser.Email == User.Identity.Name)
                 .ToListAsync();
             HttpContext.Session.SetString("ShortDate", date.ToShortDateString());
@@ -96,7 +97,9 @@ namespace Cal.Controllers
 
         public IActionResult EditEvent(int id)
         {
-            var Event = _context.Events.Find(id);
+            var Event = _context.Events
+                .Include(e => e.Category)
+                .FirstOrDefault(e => e.Id == id);
 
             /*if (Event == null)
             {
