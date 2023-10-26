@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Event>
 @{
     ViewData["Title"] = "Событие";
+    List<Category> categories = ViewBag.Categories;
 }
 
 <style>
@@ -76,6 +77,21 @@ else
 
     <div style="position:absolute; bottom:10%; background-color:black;">
         <a asp-controller="Event" asp-action="NewEvent" asp-route-date="@ViewBag.Date" style="background-color:black" class="btn btn-primary">Добавить событие</a>
+    </div>
+
+    <div class="panel">
+        @foreach (var category in categories)
+        {
+            var categoryName = category.CategoryName;
+            var categoryColor = category.CategoryColor;
+            <div class="checkbox-item">
+                <label>
+                    <input type="checkbox" name="selectedCategories" value="@categoryName" style="accent-color:@categoryColor"
+                           data-color="@categoryColor" onchange="update(this)" checked />
+                    @categoryName
+                </label>
+            </div>
+        }
     </div>
 }
 

@@ -25,6 +25,7 @@ namespace Cal.Controllers
                 .ToListAsync();
             HttpContext.Session.SetString("ShortDate", date.ToShortDateString());
             ViewBag.Date = date;
+            ViewBag.Categories = _context.Categories.Distinct().ToList();
             return View(events);
         }
 
@@ -100,11 +101,9 @@ namespace Cal.Controllers
             var Event = _context.Events
                 .Include(e => e.Category)
                 .FirstOrDefault(e => e.Id == id);
+            
+            ViewBag.Categories = _context.Categories.Distinct().ToList();
 
-            /*if (Event == null)
-            {
-                return RedirectToAction();
-            }*/
             HttpContext.Session.SetInt32("EventId", id);
             return View(Event);
         }
@@ -118,12 +117,14 @@ namespace Cal.Controllers
 
             var exist = _context.Events.Find(HttpContext.Session.GetInt32("EventId"));
 
+            var trueCategory = _context.Categories.FirstOrDefault(c => c.CategoryName == _event.Category.CategoryName);
+
             try
             {
                 exist.Name = _event.Name;
                 exist.Description = _event.Description;
                 exist.Date = _event.Date;
-
+                exist.Category = trueCategory;
             }
             catch(NullReferenceException ex)
             {
