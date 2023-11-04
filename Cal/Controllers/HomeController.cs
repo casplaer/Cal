@@ -35,8 +35,8 @@ namespace Calendar.Controllers
                 List<Event> _events = _context.Events
                     .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear && e.AppUser.Email == User.Identity.Name)
                     .ToList();
-                    List<Category> Categories = _context.Categories.Distinct().ToList();
-                    ViewBag.Categories = Categories;
+                List<Category> Categories = _context.Categories.Distinct().ToList();
+                ViewBag.Categories = Categories;
                 return View(_events);
             }
             else return View();

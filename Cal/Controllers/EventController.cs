@@ -23,9 +23,12 @@ namespace Cal.Controllers
                 .Include(e => e.Category)
                 .Where(e => e.Date.Date == date.Date && e.AppUser.Email == User.Identity.Name)
                 .ToListAsync();
+
+            var uniqueCategories = events.Select(e => e.Category).Distinct().ToList();
+            var categories = await _context.Categories.Where(c => uniqueCategories.Contains(c)).ToListAsync();
             HttpContext.Session.SetString("ShortDate", date.ToShortDateString());
             ViewBag.Date = date;
-            ViewBag.Categories = _context.Categories.Distinct().ToList();
+            ViewBag.Categories = categories;
             return View(events);
         }
 
@@ -37,8 +40,6 @@ namespace Cal.Controllers
 
             // Создайте словарь для соответствия категорий и их цветов.
             ViewBag.Categories = _context.Categories.Distinct().ToList();
-
-            // Вместо создания SelectList для категорий и цветов, теперь вы передаете словарь в представление.
 
             Event lol = new Event()
             {

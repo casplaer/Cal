@@ -1,0 +1,25 @@
+﻿.category-color {
+    width: 20px; /* Ширина элемента */
+    height: 20px; /* Высота элемента */
+    margin-right: 10px; /* Расстояние между элементом и временем события */
+    flex-shrink: 0; /* Запрет уменьшения элемента при ограничении ширины */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+span {
+    font-size: 30px; /* Размер шрифта для времени */
+    margin-right: 50px; /* Расстояние между временем и именем события */
+}
+
+div.description {
+    display: none;
+    font-size: 30px;
+    width: 1200px; /* Ширина блока описания */
+    height: auto; /* Высота блока описания */
+    overflow: auto; /* Добавляем полосы прокрутки, если содержимое превышает размеры блока */
+    word-wrap: break-word;
+}
