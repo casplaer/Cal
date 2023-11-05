@@ -16,7 +16,5 @@ namespace Cal.Models
 
         [Display(Name = "Категория")]
         public string CategoryName { get; set; }
-
-        
     }
 }

@@ -24,11 +24,19 @@
             <input asp-for="Date" class="form-control" />
             <span asp-validation-for="Date" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="Category.CategoryName" class="control-label"></label>
-            <select asp-for="Category.CategoryName" asp-items="CategoryName" class="form-control">
-                <option value="">Выберите категорию</option>
-            </select>
+
+        <label asp-for="Category" class="control-label" style="flex: 1;">Категория</label>
+        <div class="form-group" id="chooseCategory" style="display: flex;">
+            <div style="flex: 2; 120%;">
+                <select asp-for="Category.CategoryName" asp-items="CategoryName" class="form-control">
+                    <option value="">Выберите категорию</option>
+                </select>
+            </div>
+            <div style="text-align:center; text-decoration:none; flex: 1; display: flex; align-items: center; justify-content: center;">
+                <a style="text-decoration:none" asp-controller="Category" asp-action="Index" class="form-control">
+                    +
+                </a>
+            </div>
         </div>
 
         <br />

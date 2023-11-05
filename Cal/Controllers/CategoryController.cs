@@ -26,10 +26,26 @@ namespace Cal.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> NewCategory(Category category)
+        public async Task<IActionResult> NewCategory(Category category)
         {
             if (!ModelState.IsValid)
-                return Task.FromResult<IActionResult>(View(category));
+                return RedirectToAction("Index", category);
+
+            var checking = _context.Categories.FirstOrDefault(c=>c.CategoryName == category.CategoryName);
+
+            if(checking!=null)
+            {
+                TempData["Error"] = "Категория с таким названием уже существует, пожалуйста, выберите другое название.";
+                return RedirectToAction("Index", category);
+            }
+
+            checking = _context.Categories.FirstOrDefault(c=>c.CategoryColor == category.CategoryColor);
+
+            if (checking != null)
+            {
+                TempData["Error"] = "Категория с таким цветом уже существует, пожалуйста, выберите другой цвет.";
+                return View(category);
+            }
 
             var NewCategory = new Category()
             {
@@ -40,7 +56,20 @@ namespace Cal.Controllers
             _context.Categories.Add(NewCategory);
             _context.SaveChanges();
 
-            return Task.FromResult<IActionResult>(RedirectToAction("Index", "Event", new { date = HttpContext.Session.GetString("ShortDate") }));
+            return RedirectToAction("NewEvent", "Event");
+        }
+
+        public IActionResult DeleteCategory(int id)
+        {
+            var eventToDelete = _context.Events.Find(id);
+            var Date = eventToDelete.Date.Date;
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", new { date = Date });
         }
     }
 }

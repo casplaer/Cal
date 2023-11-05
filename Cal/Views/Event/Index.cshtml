@@ -33,7 +33,7 @@ else
                         <img src="icons/pencil.png" style="width:30px; height:30px">
                     </a>
                 </li>
-                <div id="description-@Event.Id" style="display: none; margin-top: 10px;" class="description">
+                <div id="description-@Event.Id" style="display: none; margin-top: 10px;" class="description description-@Event.Category.CategoryColor">
                     @Event.Description
                 </div>
             }
@@ -66,10 +66,15 @@ else
 
     function updateIndex(category) {
         var listItems = document.querySelectorAll("li[class^='element-" + category.value + "']");
+        var listDescriptionItems = document.querySelectorAll("div[class^='description description-" + category.value + "']");
 
         if (category.checked == false) {
             for (var i = 0; i < listItems.length; i++) {
                 listItems[i].style.display = "none";
+                if(listDescriptionItems[i].style.display === "block")
+                {
+                    listDescriptionItems[i].style.display = "none";
+                }
             }
         }
         else {
