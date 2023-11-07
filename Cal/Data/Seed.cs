@@ -25,24 +25,31 @@ namespace Cal.Data
 
             if(!context.Categories.Any())
             {
-                context.Categories.AddRange(new List<Models.Category>()
+                var user = await userManager.FindByEmailAsync("user@mail.ru");
+
+                var categories = new List<Category>
                 {
-                    new Models.Category()
+                    new Category
                     {
                         CategoryName = "Тестовая категория",
                         CategoryColor = "#000000",
+                        AppUser = user
                     },
-                    new Models.Category()
+                    new Category
                     {
                         CategoryName = "Тестовая категория 2",
                         CategoryColor = "#d12c7c",
+                        AppUser = user
                     },
-                    new Models.Category()
+                    new Category
                     {
                         CategoryName = "Тестовая категория 3",
                         CategoryColor = "#712cd1",
+                        AppUser = user
                     }
-                });
+                };
+
+                context.Categories.AddRange(categories);
                 context.SaveChanges();
             }
 
@@ -54,38 +61,41 @@ namespace Cal.Data
                 var category2 = context.Categories.FirstOrDefault(c => c.CategoryName == "Тестовая категория 2");
                 var category3 = context.Categories.FirstOrDefault(c => c.CategoryName == "Тестовая категория 3");
 
-                context.Events.AddRange(new List<Models.Event>()
+                var events = new List<Event>
+                {
+                    new Event
                     {
-                        new Models.Event()
-                        {
-                            Date = new DateTime(2023, 10, 19),
-                            Name = "TestEvent1",
-                            Description = "TestDescription1",
-                            AppUser = user,
-                            UserId = user.Id,
-                            Category = category1,
-                        },
-                        new Models.Event()
-                        {
-                            Date = new DateTime(2023, 10, 20),
-                            Name = "TestEvent2",
-                            Description = "TestDescription2",
-                            AppUser = user,
-                            UserId = user.Id,
-                            Category = category2,
-                        },
-                        new Models.Event()
-                        {
-                            Date = new DateTime(2023, 10, 20),
-                            Name = "TestEvent3",
-                            Description = "TestDescription3",
-                            AppUser = user,
-                            UserId = user.Id,
-                            Category = category3,
-                        }
-                    });
+                        Date = new DateTime(2023, 11, 19),
+                        Name = "TestEvent1",
+                        Description = "TestDescription1",
+                        AppUser = user,
+                        UserId = user.Id,
+                        Category = category1,
+                    },
+                    new Event
+                    {
+                        Date = new DateTime(2023, 11, 20),
+                        Name = "TestEvent2",
+                        Description = "TestDescription2",
+                        AppUser = user,
+                        UserId = user.Id,
+                        Category = category2,
+                    },
+                    new Event
+                    {
+                        Date = new DateTime(2023, 11, 20),
+                        Name = "TestEvent3",
+                        Description = "TestDescription3",
+                        AppUser = user,
+                        UserId = user.Id,
+                        Category = category3,
+                    }
+                };
+
+                context.Events.AddRange(events);
                 context.SaveChanges();
             }
+
         }
     }
 }

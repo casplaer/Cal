@@ -60,7 +60,7 @@ namespace Cal.Controllers
             TimeSpan ts = new TimeSpan(Convert.ToInt16(newEvent.Date.Hour), Convert.ToInt16(newEvent.Date.Minute), 0);
             passing = passing.Date + ts;
 
-            var user = await userManager.FindByEmailAsync("user@mail.ru");
+            var user = await userManager.FindByEmailAsync(User.Identity.Name);
 
             var trueCategory = _context.Categories.FirstOrDefault(c=>c.CategoryName==newEvent.Category.CategoryName);
 
@@ -73,7 +73,7 @@ namespace Cal.Controllers
                 UserId = user.Id,
                 Category = trueCategory,
             };
-
+            user.Events.Add(createNewEvent);
             _context.Events.Add(createNewEvent);
             _context.SaveChanges();
 

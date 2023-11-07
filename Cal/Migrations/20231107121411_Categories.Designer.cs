@@ -4,6 +4,7 @@ using Cal.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231107121411_Categories")]
+    partial class Categories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,6 +98,9 @@ namespace Cal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CategoryColor")
                         .HasColumnType("nvarchar(max)");
 
@@ -102,7 +108,12 @@ namespace Cal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Categories");
                 });
@@ -283,6 +294,15 @@ namespace Cal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Cal.Models.Category", b =>
+                {
+                    b.HasOne("Cal.Models.AppUser", "AppUser")
+                        .WithMany("Categories")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Cal.Models.Event", b =>
                 {
                     b.HasOne("Cal.Models.AppUser", "AppUser")
@@ -353,6 +373,8 @@ namespace Cal.Migrations
 
             modelBuilder.Entity("Cal.Models.AppUser", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Events");
                 });
 #pragma warning restore 612, 618

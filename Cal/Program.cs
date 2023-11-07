@@ -37,38 +37,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    /*app.UseExceptionHandler(
-                    options =>
-                    {
-                        options.Run(
-                            async context =>
-                            {
-                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                                context.Response.ContentType = "text/html";
-                                var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
-                                if (null != exceptionObject)
-                                {
-                                    var errorMessage = $"<b>Exception Error: {exceptionObject.Error.Message} </b> {exceptionObject.Error.StackTrace}";
-                                    await context.Response.WriteAsync(errorMessage).ConfigureAwait(false);
-                                }
-                            });
-                    }
-                );*/
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-app.UseStatusCodePagesWithRedirects("/error/{0}");
-app.Map("/error/{statusCode}", (int statusCode) => $"Error. Status Code: {statusCode}");
+app.UseStatusCodePagesWithRedirects("/Error/{0}"); 
+//app.Map("/error/{statusCode}", (int statusCode) => $"Error. Status Code: {statusCode}");
 //app.UseStatusCodePages();
-
-/*app.Map("/error", app => app.Run(async context =>
-{
-    context.Response.StatusCode = 500;
-    await context.Response.WriteAsync("Error 500. NullReferenceException occurred!");
-}));*/
 
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

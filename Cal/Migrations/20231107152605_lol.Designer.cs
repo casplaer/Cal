@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231023220352_a")]
-    partial class a
+    [Migration("20231107152605_lol")]
+    partial class lol
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,9 @@ namespace Cal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CategoryColor")
                         .HasColumnType("nvarchar(max)");
 
@@ -105,7 +108,12 @@ namespace Cal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Categories");
                 });
@@ -286,6 +294,15 @@ namespace Cal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Cal.Models.Category", b =>
+                {
+                    b.HasOne("Cal.Models.AppUser", "AppUser")
+                        .WithMany("Categories")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Cal.Models.Event", b =>
                 {
                     b.HasOne("Cal.Models.AppUser", "AppUser")
@@ -356,6 +373,8 @@ namespace Cal.Migrations
 
             modelBuilder.Entity("Cal.Models.AppUser", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Events");
                 });
 #pragma warning restore 612, 618

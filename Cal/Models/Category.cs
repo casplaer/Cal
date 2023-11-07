@@ -15,6 +15,9 @@ namespace Cal.Models
         public string? CategoryColor { get; set; }
 
         [Display(Name = "Категория")]
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = "Стандартное название";
+        public AppUser? AppUser { get; set; }
+        [ForeignKey("UserId")]
+        public string? UserId { get; set; }
     }
 }

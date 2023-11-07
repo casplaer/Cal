@@ -12,15 +12,17 @@ namespace Calendar.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, SignInManager<AppUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _context = context;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             int currentMonth = HttpContext.Session.GetInt32("currentMonth") ?? DateTime.Now.Month;
             ViewBag.currentMonth = currentMonth;
@@ -32,6 +34,8 @@ namespace Calendar.Controllers
             HttpContext.Session.Remove("true");
             if (_signInManager.IsSignedIn(User))
             {
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
                 List<Event> _events = _context.Events
                     .Where(e => e.Date.Month == currentMonth && e.Date.Year == currentYear && e.AppUser.Email == User.Identity.Name)
                     .ToList();

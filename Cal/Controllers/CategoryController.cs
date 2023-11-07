@@ -11,20 +11,21 @@ namespace Cal.Controllers
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CategoryController(ApplicationDbContext context, UserManager<AppUser> manager) 
+        public CategoryController(ApplicationDbContext context, UserManager<AppUser> userManager) 
         {
             _context = context;
-            userManager = manager;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult NewCategory()
         {
             return View();
         }
 
+        //Создание новой категории.
         [HttpPost]
         public async Task<IActionResult> NewCategory(Category category)
         {
@@ -47,10 +48,13 @@ namespace Cal.Controllers
                 return View(category);
             }
 
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
             var NewCategory = new Category()
             {
                 CategoryColor = category.CategoryColor,
                 CategoryName = category.CategoryName,
+                AppUser = user,
             };
 
             _context.Categories.Add(NewCategory);
@@ -59,13 +63,15 @@ namespace Cal.Controllers
             return RedirectToAction("NewEvent", "Event");
         }
 
+        //Список всех категорий данного пользователя.
         [HttpGet]
         public IActionResult CategoryList()
         {
-            List<Category> categories = _context.Categories.ToList();
+            List<Category> categories = _context.Categories.Where(c=>c.AppUser.Email == User.Identity.Name).ToList();
             return View(categories);
         }
 
+        //Удаление категории.
         public IActionResult DeleteCategory(int id)
         {
             var categoryToDelete = _context.Categories.Find(id);
@@ -78,6 +84,7 @@ namespace Cal.Controllers
             return RedirectToAction("CategoryList");
         }
 
+        //Переход на страницу редактирования категории.
         [HttpGet]
         public IActionResult EditCategory(int id)
         {
@@ -89,6 +96,7 @@ namespace Cal.Controllers
         }
 
 
+        //Редактирование категории.
         [HttpPost]
         public IActionResult EditCategory(Category _category)
         {
