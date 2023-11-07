@@ -2,6 +2,9 @@
 @inject SignInManager<AppUser> _signInManager
 @model IEnumerable<Event>
 @{
+
+    DateTime currentDate = DateTime.Now.Date;
+
     int currentYear = ViewBag.currentYear;
     int currentMonth = ViewBag.currentMonth;
 
@@ -68,6 +71,8 @@
         <div class="days" id="days">
             @for (int j = 0; j < 7; ++j)
             {
+                
+
                 if (calendarTable[i][j] == null)
                 {
                     <div class="day" style="background-color:#f2f2f2">
@@ -78,7 +83,9 @@
                 }
                 else if (!_signInManager.IsSignedIn(User))
                 {
-                    <div class="day-num">
+                    var cellDate = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
+                    bool isToday = cellDate.Date == currentDate;
+                    <div class="day-num" style="@(isToday ? "border-color:green" : "black")">
                         <div class="number">
                             @calendarTable[i][j]
                         </div>
@@ -88,10 +95,10 @@
                 {
                     //Переменная для проверки наличия событий в конкретный день.
                     var DateToCheckEvent = DateTime.Parse(currentYear.ToString() + "-" + currentMonth.ToString() + "-" + calendarTable[i][j].ToString());
-
+                    bool isToday = DateToCheckEvent.Date == currentDate;
                     var eventsOnDate = Model.Where(e => e.Date.Date == DateToCheckEvent.Date).ToList();
 
-                    <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style="color:black">
+                    <a asp-controller="Event" asp-action="Index" asp-route-date="@(currentYear)-@(currentMonth)-@calendarTable[i][j]" class="day-num" style=" @(isToday ? " border-color: green;" : "")">
                         @foreach (var c in categories)
                         {
                             if (IsEvent(DateToCheckEvent) && Model.Count(e => e.Date.Date == DateToCheckEvent && e.Category.CategoryColor == c.CategoryColor) != 0)
@@ -102,7 +109,7 @@
                                 </div>
                             }
                         }
-                        <div class="number">
+                        <div class="number" style="color:black;">
                             @calendarTable[i][j]
                         </div>
                     </a>
@@ -116,5 +123,8 @@
     <div class="category-column">
         <partial name ="HomePartials/_CategoryPanel"/>
     </div>
+    <a class="btn-primary" style="text-decoration:none; padding:10px 20px ; background-color:black;" asp-action="CategoryList" asp-controller="Category">
+        Список всех категорий
+    </a>
 }
 

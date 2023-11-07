@@ -59,17 +59,53 @@ namespace Cal.Controllers
             return RedirectToAction("NewEvent", "Event");
         }
 
+        [HttpGet]
+        public IActionResult CategoryList()
+        {
+            List<Category> categories = _context.Categories.ToList();
+            return View(categories);
+        }
+
         public IActionResult DeleteCategory(int id)
         {
-            var eventToDelete = _context.Events.Find(id);
-            var Date = eventToDelete.Date.Date;
-            if (eventToDelete != null)
+            var categoryToDelete = _context.Categories.Find(id);
+            if (categoryToDelete != null)
             {
-                _context.Events.Remove(eventToDelete);
+                _context.Categories.Remove(categoryToDelete);
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Index", new { date = Date });
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpGet]
+        public IActionResult EditCategory(int id)
+        {
+            var Category = _context.Categories
+                .FirstOrDefault(c => c.CategoryId == id);
+
+            HttpContext.Session.SetInt32("EventId", id);
+            return View(Category);
+        }
+
+
+        [HttpPost]
+        public IActionResult EditCategory(Category _category)
+        {
+            if (!ModelState.IsValid)
+                return View(_category);
+
+            var trueCat = _context.Categories.Find(_category.CategoryId);
+
+            if(trueCat != null)
+            {
+                trueCat.CategoryColor= _category.CategoryColor;
+                trueCat.CategoryName= _category.CategoryName;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("CategoryList");
+
         }
     }
 }

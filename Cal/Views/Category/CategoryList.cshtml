@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Список категорий";
+}
+<style>
+    .category-color {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px; /* Расстояние между элементом и временем события */
+        flex-shrink: 0; /* Запрет уменьшения элемента при ограничении ширины */
+    }
+</style>
+<div class="col-md-8 offset-2">
+    <ul style="list-style-type:none">
+        @foreach(var category in Model)
+        {
+            <li style="display: flex; align-items: center;">
+                <div class="category-color" style="background-color: @category.CategoryColor;"></div>
+                <span style="font-size:25px">@category.CategoryName</span>
+                <div style="flex-grow: 1;"></div>
+                <a asp-action="DeleteCategory" asp-route-id="@category.CategoryId">
+                    <img src="~/icons/trash.png" style="width:30px; height:30px">
+                </a>
+                <a asp-action="EditCategory" asp-route-id="@category.CategoryId">
+                    <img src="~/icons/pencil.png" style="width:30px; height:30px">
+                </a>
+            </li>
+        }
+    </ul>
+</div>
