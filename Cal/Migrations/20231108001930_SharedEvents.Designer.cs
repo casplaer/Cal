@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231107121411_Categories")]
-    partial class Categories
+    [Migration("20231108001930_SharedEvents")]
+    partial class SharedEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -145,6 +145,9 @@ namespace Cal.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int?>("SharedEventsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
@@ -154,7 +157,29 @@ namespace Cal.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("SharedEventsId");
+
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("Cal.Models.SharedEvents", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SharedEvents");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -315,6 +340,10 @@ namespace Cal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Cal.Models.SharedEvents", null)
+                        .WithMany("Events")
+                        .HasForeignKey("SharedEventsId");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Category");
@@ -375,6 +404,11 @@ namespace Cal.Migrations
                 {
                     b.Navigation("Categories");
 
+                    b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("Cal.Models.SharedEvents", b =>
+                {
                     b.Navigation("Events");
                 });
 #pragma warning restore 612, 618

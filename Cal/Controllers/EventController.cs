@@ -39,7 +39,7 @@ namespace Cal.Controllers
             DateTime.TryParse(HttpContext.Session.GetString("ShortDate"), out aboba);
 
             // Создайте словарь для соответствия категорий и их цветов.
-            ViewBag.Categories = _context.Categories.Distinct().ToList();
+            ViewBag.Categories = _context.Categories.Where(c=>c.AppUser.Email == User.Identity.Name).Distinct().ToList();
 
             Event lol = new Event()
             {
@@ -73,7 +73,6 @@ namespace Cal.Controllers
                 UserId = user.Id,
                 Category = trueCategory,
             };
-            user.Events.Add(createNewEvent);
             _context.Events.Add(createNewEvent);
             _context.SaveChanges();
 
@@ -85,6 +84,12 @@ namespace Cal.Controllers
         {
             var eventToDelete = _context.Events.Find(id);
             var Date = eventToDelete.Date.Date;
+
+            if (eventToDelete.AppUser.Email != User.Identity.Name)
+            {
+                return RedirectToAction("Error", "Error", 404);
+            }
+
             if (eventToDelete != null)
             {
                 _context.Events.Remove(eventToDelete);
@@ -99,10 +104,17 @@ namespace Cal.Controllers
 
         public IActionResult EditEvent(int id)
         {
+
             var Event = _context.Events
                 .Include(e => e.Category)
+                .Include(e => e.AppUser)
                 .FirstOrDefault(e => e.Id == id);
             
+            if(Event.AppUser.Email != User.Identity.Name)
+            {
+                return RedirectToAction("Error", "Error", 404);
+            }
+
             ViewBag.Categories = _context.Categories.Distinct().ToList();
 
             HttpContext.Session.SetInt32("EventId", id);
@@ -111,7 +123,7 @@ namespace Cal.Controllers
 
         [HttpPost]
         [Route("Event/EditEvent")]
-        public IActionResult EditEvent(Event _event)
+        public async Task<IActionResult> EditEvent(Event _event)
         {
             if (!ModelState.IsValid)
                 return View(_event);
@@ -119,6 +131,8 @@ namespace Cal.Controllers
             var exist = _context.Events.Find(HttpContext.Session.GetInt32("EventId"));
 
             var trueCategory = _context.Categories.FirstOrDefault(c => c.CategoryName == _event.Category.CategoryName);
+
+            var user = await userManager.FindByEmailAsync(User.Identity.Name);
 
             try
             {
@@ -137,6 +151,43 @@ namespace Cal.Controllers
 
             return RedirectToAction("Index", new { date = exist.Date });
 
+        }
+
+        [HttpPost]
+        public IActionResult ShareEvents(List<int> selectedEvents)
+        {
+            List<Event> events = _context.Events
+                .Where(e => selectedEvents.Contains(e.Id))
+                .Include(e=>e.Category)
+                .Include(e=>e.AppUser)
+                .ToList();
+
+            string uniqueIdentifier = Guid.NewGuid().ToString();
+
+            SharedEvents sharedEvents = new SharedEvents
+            {
+                UniqueIdentifier = uniqueIdentifier,
+                Events = events,
+                CreationTime = DateTime.Now
+            };
+
+            _context.SharedEvents.Add(sharedEvents);
+            _context.SaveChanges();
+
+            return Redirect($"/ShareEvents/{uniqueIdentifier}");
+        }
+
+        [HttpGet]
+        [Route("ShareEvents/{uniqueIdentifier}")]
+        public IActionResult ShareEvents(string uniqueIdentifier)
+        {
+            SharedEvents shared = _context.SharedEvents
+                .Include(se => se.Events)
+                    .ThenInclude(e=>e.Category)
+                    .ThenInclude(e=>e.AppUser)
+                .FirstOrDefault(se => se.UniqueIdentifier == uniqueIdentifier);
+
+            return View(shared);
         }
     }
 }

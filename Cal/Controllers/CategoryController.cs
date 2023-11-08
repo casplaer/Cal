@@ -32,7 +32,7 @@ namespace Cal.Controllers
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", category);
 
-            var checking = _context.Categories.FirstOrDefault(c=>c.CategoryName == category.CategoryName);
+            var checking = _context.Categories.FirstOrDefault(c => c.CategoryName == category.CategoryName && c.AppUser.Email == User.Identity.Name);
 
             if(checking!=null)
             {
@@ -40,7 +40,7 @@ namespace Cal.Controllers
                 return RedirectToAction("Index", category);
             }
 
-            checking = _context.Categories.FirstOrDefault(c=>c.CategoryColor == category.CategoryColor);
+            checking = _context.Categories.FirstOrDefault(c=>c.CategoryColor == category.CategoryColor && c.AppUser.Email == User.Identity.Name);
 
             if (checking != null)
             {

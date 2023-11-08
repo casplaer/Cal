@@ -1,5 +1,6 @@
 using Cal.Data;
 using Cal.Models;
+using Cal.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+
+builder.Services.AddHostedService<SharedEventsCleanupService>();
 
 var app = builder.Build();
 

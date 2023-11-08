@@ -1,0 +1,114 @@
+﻿@model SharedEvents
+@{
+    List<Category> categories = Model.Events.Select(e => e.Category).Distinct().ToList();
+}
+
+<link rel="stylesheet" href="css/eventIndex.css" />
+
+<style>
+    .category-color {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px; /* Расстояние между элементом и временем события */
+        flex-shrink: 0; /* Запрет уменьшения элемента при ограничении ширины */
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    span {
+        font-size: 30px; /* Размер шрифта для времени */
+        margin-right: 50px; /* Расстояние между временем и именем события */
+    }
+
+    div.description {
+        display: none;
+        font-size: 30px;
+        width: 1200px; /* Ширина блока описания */
+        height: auto; /* Высота блока описания */
+        overflow: auto; /* Добавляем полосы прокрутки, если содержимое превышает размеры блока */
+        word-wrap: break-word;
+    }
+</style>
+
+@if(Model is not null)
+{
+    <div>
+        @if(Model.Events.FirstOrDefault().AppUser.Email == User.Identity.Name)
+        {
+            <span>
+                События, которыми вы хотите поделиться:
+            </span>
+        }
+        else
+        {
+            <span style="font-size:25px">
+                С Вами поделились следующими планами:
+            </span>
+        }
+        <ul>
+            @foreach (var Event in Model.Events.OrderBy(e => e.Date))
+            {
+                <li class="element-@Event.Category.CategoryColor" style="display: flex; align-items: center;">
+                    <div class="category-color" style="background-color: @Event.Category.CategoryColor;"></div>
+                    <span>@Event.Date.ToShortTimeString()</span>
+                    <a style="font-size:30px; color: black; text-decoration: none; cursor: pointer;" onclick="toggleDescription(@Event.Id)">@Event.Name</a>
+                    <div style="flex-grow: 1;"></div> <!-- Этот элемент занимает всю доступную ширину и создает пространство между названием и описанием -->
+                </li>
+                <div id="description-@Event.Id" style="display: none; margin-top: 10px;" class="description description-@Event.Category.CategoryColor">
+                    @Event.Description
+                </div>
+            }
+        </ul>
+    </div>
+        <div class="categories">
+            <div class="panel" style="">
+                @foreach (var category in categories)
+                {
+                    var categoryName = category.CategoryName;
+                    var categoryColor = category.CategoryColor;
+                    <div class="checkbox-item">
+                        <label>
+                            <input type="checkbox" name="selectedCategories" value="@categoryColor" style="accent-color:@categoryColor"
+                                   data-color="@categoryColor" onchange="updateIndex(this)" checked />
+                            @categoryName
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+}
+
+
+<script>
+
+    function updateIndex(category) {
+        var listItems = document.querySelectorAll("li[class^='element-" + category.value + "']");
+        var listDescriptionItems = document.querySelectorAll("div[class^='description description-" + category.value + "']");
+
+        if (category.checked == false) {
+            for (var i = 0; i < listItems.length; i++) {
+                listItems[i].style.display = "none";
+                if (listDescriptionItems[i].style.display === "block") {
+                    listDescriptionItems[i].style.display = "none";
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < listItems.length; i++) {
+                listItems[i].style.display = "flex";
+            }
+        }
+    }
+    function toggleDescription(eventId) {
+        var descriptionElement = document.querySelector("#description-" + eventId);
+        if (descriptionElement.style.display === "none" || descriptionElement.style.display === "") {
+            descriptionElement.style.display = "block";
+        } else {
+            descriptionElement.style.display = "none";
+        }
+    }
+
+</script>
