@@ -123,8 +123,14 @@
     <div class="category-column">
         <partial name ="HomePartials/_CategoryPanel"/>
     </div>
-    <a class="btn-primary" style="text-decoration:none; padding:10px 20px ; background-color:black;" asp-action="CategoryList" asp-controller="Category">
-        Список всех категорий
-    </a>
+    <div style="display:flex">
+        <a class="btn-primary" style="text-decoration:none; padding:10px 20px ; background-color:black;" asp-action="CategoryList" asp-controller="Category">
+            Список всех категорий
+        </a>
+        <div style="flex-grow:1"></div>
+        <a style="text-decoration:none; padding:10px 20px ; background-color:black; border-color:black" class="btn-primary" asp-action="SharedEventsList" asp-controller="Event">
+            Список событий, которыми вы поделились
+        </a>
+    </div>
 }
 

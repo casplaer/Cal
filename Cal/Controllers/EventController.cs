@@ -189,5 +189,15 @@ namespace Cal.Controllers
 
             return View(shared);
         }
+
+        [HttpGet]
+        public IActionResult SharedEventsList()
+        {
+            List<SharedEvents> sharedEvents = _context.SharedEvents
+                .Where(se => se.Events.FirstOrDefault().AppUser.Email == User.Identity.Name)
+                .Include(e=>e.Events)
+                .ToList();
+            return View(sharedEvents);
+        }
     }
 }

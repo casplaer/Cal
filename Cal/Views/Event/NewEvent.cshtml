@@ -19,32 +19,8 @@
     <h1 style="align-self:center">Новое событие на @Model.Date.Date.ToShortDateString()</h1>
 }
 
-<script>
+<script src="~/js/events.js">
 
-
-    function closeC()
-    {
-        var newCategoryForm = document.getElementById('newCategoryForm');
-        newCategoryForm.style.display = 'block';
-        document.getElementById('chooseCategory').style.display = 'none';
-        document.getElementById('addCategoryButton').style.display = 'none';
-        document.getElementById('backButton').style.display = 'block';
-    }
-
-    function backC()
-    {
-        var newCategoryForm = document.getElementById('newCategoryForm');
-        newCategoryForm.style.display = 'none';
-        document.getElementById('chooseCategory').style.display = 'block';
-        document.getElementById('addCategoryButton').style.display = 'block';
-        document.getElementById('backButton').style.display = 'none';
-    }
-
-    function updateCategory(category) 
-    {
-        var a = document.getElementById("chooseCategory");
-        a.value = category.value;
-    }
 </script>
 
 <style>

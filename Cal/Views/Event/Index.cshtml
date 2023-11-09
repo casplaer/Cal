@@ -39,14 +39,17 @@ else
                     </div>
                 }
             </ul>
+        <div style="display:flex; align-items:center">
+            <div>
+                <a asp-controller="Event" asp-action="NewEvent" asp-route-date="@ViewBag.Date" style="background-color:black; border-color:black;" class="btn btn-primary">Добавить событие</a>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <button id="checkboxButton" class="btn btn-primary" style="background-color:black; border-color:black;" type="submit">Поделиться выбранными событиями</button>
+        </div>
         </form>
-        <button class="btn btn-primary" style="background-color:black; border-color:black;" type="submit">Поделиться выбранными событиями</button>
     </div>
 
     <div class="categories">
-        <div>
-            <a asp-controller="Event" asp-action="NewEvent" asp-route-date="@ViewBag.Date" style="background-color:black; border-color:black;" class="btn btn-primary">Добавить событие</a>
-        </div>
 
         <div class="panel" style="">
             @foreach (var category in categories)
@@ -65,34 +68,4 @@ else
     </div>
 }
 
-<script>
-
-    function updateIndex(category) {
-        var listItems = document.querySelectorAll("li[class^='element-" + category.value + "']");
-        var listDescriptionItems = document.querySelectorAll("div[class^='description description-" + category.value + "']");
-
-        if (category.checked == false) {
-            for (var i = 0; i < listItems.length; i++) {
-                listItems[i].style.display = "none";
-                if(listDescriptionItems[i].style.display === "block")
-                {
-                    listDescriptionItems[i].style.display = "none";
-                }
-            }
-        }
-        else {
-            for (var i = 0; i < listItems.length; i++) {
-                listItems[i].style.display = "flex";
-            }
-        }
-    }
-    function toggleDescription(eventId) {
-        var descriptionElement = document.querySelector("#description-" + eventId);
-        if (descriptionElement.style.display === "none" || descriptionElement.style.display === "") {
-            descriptionElement.style.display = "block";
-        } else {
-            descriptionElement.style.display = "none";
-        }
-    }
-
-</script>
+<script src="~/js/events.js"></script>

@@ -3,35 +3,8 @@
     List<Category> categories = Model.Events.Select(e => e.Category).Distinct().ToList();
 }
 
-<link rel="stylesheet" href="css/eventIndex.css" />
-
-<style>
-    .category-color {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px; /* Расстояние между элементом и временем события */
-        flex-shrink: 0; /* Запрет уменьшения элемента при ограничении ширины */
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    span {
-        font-size: 30px; /* Размер шрифта для времени */
-        margin-right: 50px; /* Расстояние между временем и именем события */
-    }
-
-    div.description {
-        display: none;
-        font-size: 30px;
-        width: 1200px; /* Ширина блока описания */
-        height: auto; /* Высота блока описания */
-        overflow: auto; /* Добавляем полосы прокрутки, если содержимое превышает размеры блока */
-        word-wrap: break-word;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="~/css/eventIndex.css" />
+<script src="~/js/events.js"></script>
 
 @if(Model is not null)
 {
@@ -62,7 +35,10 @@
                 </div>
             }
         </ul>
+
+        <input style="display:none" type="text" value="https://localhost:7039/ShareEvents/@Model.UniqueIdentifier" id="myInput">
     </div>
+    <div style="display:flex">
         <div class="categories">
             <div class="panel" style="">
                 @foreach (var category in categories)
@@ -72,43 +48,14 @@
                     <div class="checkbox-item">
                         <label>
                             <input type="checkbox" name="selectedCategories" value="@categoryColor" style="accent-color:@categoryColor"
-                                   data-color="@categoryColor" onchange="updateIndex(this)" checked />
+                            data-color="@categoryColor" onchange="updateIndex(this)" checked />
                             @categoryName
-                        </label>
+                         </label>
                     </div>
-                }
-            </div>
+                    }
+                </div>
         </div>
+        <div style="flex-grow: 1;"></div>
+        <button class="btn btn-primary" style="background-color:black; border-color:black" onclick="myFunction()">Скопировать ссылку</button>
+    </div>
 }
-
-
-<script>
-
-    function updateIndex(category) {
-        var listItems = document.querySelectorAll("li[class^='element-" + category.value + "']");
-        var listDescriptionItems = document.querySelectorAll("div[class^='description description-" + category.value + "']");
-
-        if (category.checked == false) {
-            for (var i = 0; i < listItems.length; i++) {
-                listItems[i].style.display = "none";
-                if (listDescriptionItems[i].style.display === "block") {
-                    listDescriptionItems[i].style.display = "none";
-                }
-            }
-        }
-        else {
-            for (var i = 0; i < listItems.length; i++) {
-                listItems[i].style.display = "flex";
-            }
-        }
-    }
-    function toggleDescription(eventId) {
-        var descriptionElement = document.querySelector("#description-" + eventId);
-        if (descriptionElement.style.display === "none" || descriptionElement.style.display === "") {
-            descriptionElement.style.display = "block";
-        } else {
-            descriptionElement.style.display = "none";
-        }
-    }
-
-</script>

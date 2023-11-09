@@ -32,6 +32,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
 builder.Services.AddHostedService<SharedEventsCleanupService>();
+builder.Services.AddHostedService<EmailService>();
 
 var app = builder.Build();
 

@@ -75,6 +75,11 @@ namespace Cal.Controllers
         public IActionResult DeleteCategory(int id)
         {
             var categoryToDelete = _context.Categories.Find(id);
+            if (_context.Events.Any(e=>e.Category.CategoryId == id))
+            {
+                TempData["Error"] = "Cобытия с такой категорией ещё существуют, Вам придётся сначала удалить их.";
+                return RedirectToAction("CategoryList");
+            }    
             if (categoryToDelete != null)
             {
                 _context.Categories.Remove(categoryToDelete);

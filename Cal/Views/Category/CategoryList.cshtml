@@ -20,6 +20,13 @@
 else
 {
     <div class="col-md-8 offset-2">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Извините, произошла ошибка!</b> - @TempData["Error"] </span>
+            </div>
+        }
+
         <ul style="list-style-type:none">
             @foreach(var category in Model)
             {
